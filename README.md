@@ -14,7 +14,7 @@ The features are explained in depth in their respective sections.
 
 ## 3 Useage / Directions
 
-## 4 Item / Gear Description
+## 4 Item / Gear Attributes
 Gear in Epic Seven have several attributes: **Type**, **Grade**, **Set**, **Tier** (derived from **Level**), **Main Stats**, and **Sub Stats**.
 
 ### 4.1 Type
@@ -132,9 +132,30 @@ Note that the specifics of how these stats (such as flat or percent) affect a he
 
 ## 6 Gear Upgrade System
 Epic Seven allows upgrading/modifying gear through Enhancing, Reforging, and Modification.
+
 ### 6.1 Enhance System
 Every gear starts at enhance level = 0. Every time a gear is enhanced, it's enhance level goes up by +1, up to +15 (which is the max enhance level). A gear must be +15 level of enhancement before it may be reforged or modified.
 
+**6.1.1 Mainstat**
+
 At every enhance level, the value of the main stat goes up by a certain multiplier on the base value (value at enhance level = 0); for the specific multiplier values check the enhance_mainstat() function.
 
-At every three enhance level (+3, +6, +9, +12, +15), a random substat on the gear is chosen to go up in value (based on values picked from 'substat' > 'values' > 'Rare'/'Heroic'/'Epic' > index referring to Tier, with rates take from corresponding 'rates' values)
+**6.1.2 Substats**
+
+At every three enhance levels (+3, +6, +9, +12, +15), a random substat on the gear is chosen to go up in value (based on values picked from 'substat' > 'values' > 'Rare'/'Heroic'/'Epic' > index referring to Tier of gear, with rates take from corresponding 'rates' values). For Heroic gear (which has 3 starting substats), at +12, a new substat is added. For Rare gear (which has 2 starting substats), at +9 and +12, new substats are added. The added substats follow the general and gear type specific restrictions.
+
+### 6.2 Reforge System
+
+A gear may only be reforged if it is item level 85 and it is at enhance level +15. When a gear is reforged, its level goes up from 85 to 90. The mainstat value is changed to the value found under 'reforge'>'mainstat' (no addition needed, the value is simply replaced). The current substat value increases by (so addition needed) the value found under 'reforge'>'substat' depending on the number of times the stat has rolled (0 to 5). If a stat has rolled 0 times, the 0th index value is taken; if a stat has rolled 5 times, the 5th index value is taken from 'substat', and so on (This goes for both modded and non-modded substats). A gear may be reforged only once.
+
+### 6.3 Modification System
+
+A gear may only be modified if it is at enhance level +15. When a gear is modified, one of the 4 substats is chosen to be replaced by another (or the same) chosen substat (following general and type specific restrictions). Only one substat on a gear may be modified. So, if a gear has been modified, only the stat that had been modified already may be further modified. Any other stats on that gear may not be modified. 
+
+The modification values are taken from the 'mod_vals' key, which have two subkeys - 'greater' and 'lesser'. Each of these subkeys is a list of length two - the first index refers to values for gear that is level 88 or below, the second index refers to values for gear that is level 90. Each of these indices, in turn, is a list of length 6, with the indices here referring to how many items an item has been rolled. For instance, if a **greater** modification is performed on a substat that has **rolled 2 times** on a **Level 90 gear**, the value from the 'greater' key, index=1 (because level 90), and in turn index=2 (rolled two times) is chosen. i.e.. STATS['0]['mod_vals]['greater'][1][2]
+
+## References:
+* **Substat Roll Rates**:
+* **Modification Values**:
+* **Other General Information**:
+
