@@ -95,6 +95,8 @@ Gear Grade also affect the roll ranges and corresponding probability rates, so i
 Gear Grades data is stored in the **GRADES.json** file. Preparation of the data is found in the *prep_data_GRADES.py* script.
 
 ## 5 Stats
+### 5.1 Stat Descriptions
+
 Currently, gear in Epic Seven can have the following stats as main stat or substats. The name in parenthesis is the name by which that stat is referred to under the 'key_stat' key in the STATS.json file.
 
 * **Attack**: This modifies the Attack (ATK) stat of a hero, and can either be *ATK* (id: 0; key_stat: attack_flat) or *ATK% (id: 1; key_stat: attack_percent)
@@ -106,12 +108,33 @@ Currently, gear in Epic Seven can have the following stats as main stat or subst
 * **Effect Resistance**: This modifies the Effect Resistance (ER) stat of a hero, and is represented by ER (id: 9; key_stat: eff_res)
 * **Speed**: This modifies the Speed (SPD) stat of a hero, and is represented by SPD (id: 10; key_stat: speed_flat)
 
-There are restrictions on whether a specific Gear **Type** can have certain stats as main stats or substats. Please refer to section 4.1 Type to check these restrictions. A general restriction of stats on an item is that stats may not be duplicated on a gear. For instance, it is impossible to have two or more lines of Speed or two or more lines of Attack. Note that ATK and ATK%, HP and HP%, and DEF and DEF% are not duplicates, so a gear may have both flat and percent of a specific type (assuming they don't violate TYPE specific restrictions). Similarly, the stat that has been assigned as the mainstat may not repeat in the substats. For instance, Weapons always have ATK as a mainstat, so it may never have ATK as a substat (ATK% on the other hand is perfectly fine and allowed).
+### 5.2 Stat Restrictions
+There are restrictions on whether a specific Gear **Type** can have certain stats as main stats or substats. Please refer to section 4.1 Type to check these restrictions. 
 
-When creating a gear and a stat is added to the gear (either as mainstat or substat), the value of the stat depends on the **Grade** and **Tier** of the gear. The mainstat value is usually fixed for a given Grade and Type, but the substat value is taken from a range of values. For instance, for a Level 85 (Tier 6) Epic Gear, speed as a substat can be anywhere from 2 to 5 (the corresponding probability rates are stored in the STATS.json file). Another example is that for Level 85 (Tier 6) Boots (of any Grade), speed as a starting mainstat will always be 8 regardless of item grade; Level 90 (Tier 7) Boots on the other hand will have starting speed of 9 as mainstat (again, regardless of Grade).
+A general restriction of stats on an item is that stats may not be duplicated on a gear. For instance, it is impossible to have two or more lines of Speed or two or more lines of Attack. Note that ATK and ATK%, HP and HP%, and DEF and DEF% are not duplicates, so a gear may have both flat and percent of a specific type (assuming they don't violate TYPE specific restrictions). Similarly, the stat that has been assigned as the mainstat may not repeat in the substats. For instance, Weapons always have ATK as a mainstat, so it may never have ATK as a substat (ATK% on the other hand is perfectly fine and allowed).
 
+### 5.3 Stat Values
+When creating a gear and a stat is added to the gear (either as mainstat or substat), the value of the stat depends on the **Grade** and **Tier** of the gear. The mainstat value is usually ('type' key) fixed for a given Grade and Type, but the substat value is taken from a range of values ('type' = rand). For instance, for a Level 85 (Tier 6) Epic Gear, speed as a substat can be anywhere from 2 to 5 (the corresponding probability rates are stored in the STATS.json file). Another example is that for Level 85 (Tier 6) Boots (of any Grade), speed as a starting mainstat will always be 8 regardless of item grade; Level 90 (Tier 7) Boots on the other hand will have starting speed of 9 as mainstat (again, regardless of Grade).
+
+### 5.4 Gear Score Multiplier
 Each stat also has a gear score multiplier ('gscore' key) that is used or calculating the gear score of a gear. For instance, each point in speed has a gscore mutliplier of 2, i.e. 4 speed gives (4x2) 8 gear score.
 
-When a gear is **Enhanced**, the main stat and some of the substats may go up in value (refer to Enhancing section for more details). When a gear is **Reforged**, the values of both the main stats and (usually) all the substats increase (refer to Reforging section). When a substat of a gear is **Modified**, the value of the substat changes based on how many times that stat has rolled (refer to Modify section).
+### 5.5 Enhance Values
+When a gear is **Enhanced** from +0 to +15 (refer to Enhance section), the main stat goes up by a multiplier based on the level. For details check the enhance_mainstat() function. At every +3 level of enhancement, a substat value may go up, the value it goes up by depends on the Grade and Tier. Under the 'substat' key, 'values' key have three subkeys for the grades: 'Rare', 'Heroic', and 'Epic'. Each of these subkeys is a list of length 3, with index 0 referring to Tier 5, index 1 referring to Tier 6, and index 2 referring to Tier 7 values. The corresponding probability rates of choosing any of these values is stored in the 'rates' key.
+
+### 5.6 Reforge Values
+When a gear is **Reforged**, the values of both the main stats and (usually) all the substats increase (refer to Reforging section). This info is stored under the 'reforge' key, which has 3 subkeys: 'mainstat', 'substat', and 'modded'. The 'mainstat' key has only one value - when an item is reforged, this value replaces the previous value. The 'substat' key has 6 values, each index referring to how many times a stat has been rolled on a +15 gear. For instance, if Speed is one of the substats on a gear, and it has rolled oned time, then the index 1 value under the 'substat' key is used to raise the Speed stat by when reforging. 'modded' key also has 6 values similar to 'substat' key and is used in the same way, only when the stat has been modded. Incidentally, these values are the same as 'substat' values, so regardless of whether an item has been modded or not, it goes up by the same value when it has been reforged.
+
+### 5.7 Modify Values
+When a substat of a gear is **Modified**, the value of the substat changes based on how many times that stat has rolled (refer to Modify section). These values are stored in the 'mod_vals' key. There are two subkeys: 'greater' or 'lesser' depending on what type of modification gem is chosen. Each of these subkeys is a list of length two - the first index refers to values for gear that is level 88 or below, the second index refers to values for gear that is level 90. Each of these indices, in turn, is a list of length 6, with the indices here referring to how many items an item has been rolled. For instance, if a **greater** modification is performed on a substat that has **rolled 2 times** on a **Level 90 gear**, the value from the 'greater' key, index=1 (because level 90), and in turn index=2 (rolled two times) is chosen. i.e.. STATS['0]['mod_vals]['greater'][1][2]
 
 Note that the specifics of how these stats (such as flat or percent) affect a hero's stats are beyond the scope of this app. Gear Stats data is stored in the **STATS.json** file. Preparation of the data is found in the *prep_data_STATS.py* script.
+
+## 6 Gear Upgrade System
+Epic Seven allows upgrading/modifying gear through Enhancing, Reforging, and Modification.
+### 6.1 Enhance System
+Every gear starts at enhance level = 0. Every time a gear is enhanced, it's enhance level goes up by +1, up to +15 (which is the max enhance level). A gear must be +15 level of enhancement before it may be reforged or modified.
+
+At every enhance level, the value of the main stat goes up by a certain multiplier on the base value (value at enhance level = 0); for the specific multiplier values check the enhance_mainstat() function.
+
+At every three enhance level (+3, +6, +9, +12, +15), a random substat on the gear is chosen to go up in value (based on values picked from 'substat' > 'values' > 'Rare'/'Heroic'/'Epic' > index referring to Tier, with rates take from corresponding 'rates' values)
