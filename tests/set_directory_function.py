@@ -12,3 +12,7 @@ def set_directory():
 
     # Add the parent directory to the path
     sys.path.insert(0, parent_dir)
+    
+    # Add the data directory to the path
+    data_dir = os.path.join(parent_dir, 'data')
+    sys.path.insert(0, data_dir)

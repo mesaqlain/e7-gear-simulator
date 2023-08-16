@@ -25,6 +25,9 @@ The data preparation modules and the json files created by these modules are fou
 * [SETS](https://github.com/mesaqlain/e7_items/blob/main/data/prep_data_SETS.py): Contains data on gear sets.
 * [STATS](https://github.com/mesaqlain/e7_items/blob/main/data/prep_data_STATS.py): Contains data on the stats that show up on gear.
 
+### 3.X Testing
+The testing modules are found in the [tests](https://github.com/mesaqlain/e7_items/blob/main/tests/) folder. The testing process is documented in this [notebook](https://github.com/mesaqlain/e7_items/blob/main/tests/tests_documentation.ipynb). 
+
 ## 4 Item / Gear Attributes
 Gear in Epic Seven have several attributes: **Type**, **Grade**, **Set**, **Tier** (derived from **Level**), **Main Stats**, and **Sub Stats**.
 
