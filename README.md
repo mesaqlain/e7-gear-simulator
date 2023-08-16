@@ -10,9 +10,20 @@ This is an ongoing project to create an app in python that will simulate the gen
 
 The features are explained in depth in their respective sections.
 
-## 2 Requirements
+## 2 Requirements / Imports
+* json
+* random
+* pandas (only for data_prep modules in /data folder)
 
 ## 3 Useage / Directions
+
+### 3.X Data Preparation
+The data preparation modules and the json files created by these modules are found in the /data folder. More information on what values to use from this data is found in sections 4 and 5. The scripts could be modified to add new information as the game gets updated with new sets or tiers.
+* [TYPES](https://github.com/mesaqlain/e7_items/blob/main/data/prep_data_TYPES.py): Contains data on gear types.
+* [TIERS](https://github.com/mesaqlain/e7_items/blob/main/data/prep_data_TIERS.py): Contains data on gear tiers.
+* [GRADES](https://github.com/mesaqlain/e7_items/blob/main/data/prep_data_GRADES.py): Contains data on gear grades.
+* [SETS](https://github.com/mesaqlain/e7_items/blob/main/data/prep_data_SETS.py): Contains data on gear sets.
+* [STATS](https://github.com/mesaqlain/e7_items/blob/main/data/prep_data_STATS.py): Contains data on the stats that show up on gear.
 
 ## 4 Item / Gear Attributes
 Gear in Epic Seven have several attributes: **Type**, **Grade**, **Set**, **Tier** (derived from **Level**), **Main Stats**, and **Sub Stats**.
@@ -155,7 +166,7 @@ A gear may only be modified if it is at enhance level +15. When a gear is modifi
 The modification values are taken from the 'mod_vals' key, which have two subkeys - 'greater' and 'lesser'. Each of these subkeys is a list of length two - the first index refers to values for gear that is level 88 or below, the second index refers to values for gear that is level 90. Each of these indices, in turn, is a list of length 6, with the indices here referring to how many items an item has been rolled. For instance, if a **greater** modification is performed on a substat that has **rolled 2 times** on a **Level 90 gear**, the value from the 'greater' key, index=1 (because level 90), and in turn index=2 (rolled two times) is chosen. i.e.. STATS['0]['mod_vals]['greater'][1][2]
 
 ## References:
-* **Substat Roll Rates**:
-* **Modification Values**:
-* **Other General Information**:
+* **Substat Roll Rates**: [Epic Seven Official Site](https://page.onstove.com/epicseven/global/view/7902683)
+* **Modification Values**: [Epic Seven Official Discord](https://i.imgur.com/YYcbWCi.png)
+* **Other General Information**: [Epic 7x](https://epic7x.com/equipment-tutorial/)
 
