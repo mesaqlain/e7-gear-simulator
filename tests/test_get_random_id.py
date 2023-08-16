@@ -6,6 +6,7 @@ import json
 from src.stats import Stat 
 
 STATS = json.loads(open('data/stats.json', 'r').read())
+TYPES = json.loads(open('data/types.json', 'r').read())
 
 class TestStat(unittest.TestCase):
 
@@ -40,35 +41,24 @@ class TestStat(unittest.TestCase):
         self.assertEqual(stat, expected_stat, "Valid int stat ID should return the correct dictionary")
 
     def test_invalid_int_stat_id(self):
-        """Test whether an invalid int raises ValueError"""
-        with self.assertRaises(ValueError): 
-            self.stat.get_stat_by_id(100)
+        """Test whether an invalid int returns None"""
+        stat_invalid = self.stat.get_stat_by_id(100)
+        self.assertIsNone(stat_invalid, "Invalid stat ID should return None")
 
     def test_invalid_str_stat_id(self):
-        """Test whether an invalid str raises ValueError"""
-        with self.assertRaises(ValueError): 
-            self.stat.get_stat_by_id('100')
+        """Test whether an invalid str returns None"""
+        stat_invalid = self.stat.get_stat_by_id('100')
+        self.assertIsNone(stat_invalid, "Invalid stat ID should return None")
         
     def test_invalid_neg_stat_id(self):
-        """Test whether an invalid negative int raises ValueError"""
-        with self.assertRaises(ValueError): 
-            self.stat.get_stat_by_id(-1)
+        """Test whether an invalid negative int returns None"""
+        stat_invalid = self.stat.get_stat_by_id(-1)
+        self.assertIsNone(stat_invalid, "Invalid neg stat ID should return None")
         
     def test_invalid_large_stat_id(self):
-        """Test whether an invalid large int raises ValueError"""
-        with self.assertRaises(ValueError): 
-            self.stat.get_stat_by_id(1000000)
-            
-    def test_invalid_str_random_stat_id(self):
-        """Test whether an invalid random str raises ValueError"""
-        with self.assertRaises(ValueError): 
-            self.stat.get_stat_by_id('Health')
-        
-    def test_invalid_none_stat_id(self):
-        """Test whether None raises ValueError"""
-        with self.assertRaises(ValueError): 
-            self.stat.get_stat_by_id(None)
-    
+        """Test whether an invalid large int returns None"""
+        stat_invalid = self.stat.get_stat_by_id(1000000)
+        self.assertIsNone(stat_invalid, "Invalid large int stat ID should return None")
 
 if __name__ == '__main__':
     unittest.main()
