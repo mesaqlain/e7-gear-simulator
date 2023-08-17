@@ -8,15 +8,15 @@
 import json
 
 TIERS = {
-    'Tier 5': {
+    'tier 5': {
         'item_tier': 5,
         'level_range': list(range(58, 72))
     },
-    'Tier 6': {
+    'tier 6': {
         'item_tier': 6,
         'level_range': list(range(72, 86))
     },
-    'Tier 7': {
+    'tier 7': {
         'item_tier': 7,
         'level_range': list(range(86, 100))
     }

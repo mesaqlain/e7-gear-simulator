@@ -1,5 +1,5 @@
 {
-    "Weapon": {
+    "weapon": {
         "mainstat": [
             0
         ],
@@ -14,7 +14,7 @@
             10
         ]
     },
-    "Helm": {
+    "helm": {
         "mainstat": [
             2
         ],
@@ -31,7 +31,7 @@
             10
         ]
     },
-    "Armor": {
+    "armor": {
         "mainstat": [
             4
         ],
@@ -46,7 +46,7 @@
             10
         ]
     },
-    "Necklace": {
+    "necklace": {
         "mainstat": [
             0,
             1,
@@ -71,7 +71,7 @@
             10
         ]
     },
-    "Ring": {
+    "ring": {
         "mainstat": [
             0,
             1,
@@ -96,7 +96,7 @@
             10
         ]
     },
-    "Boots": {
+    "boots": {
         "mainstat": [
             0,
             1,

@@ -9,27 +9,27 @@
 import json
 
 TYPES = {
-    'Weapon': {
+    'weapon': {
         'mainstat': [0],
         'substat': [1, 2, 3, 6, 7, 8, 9, 10]
     },
-    'Helm': {
+    'helm': {
         'mainstat': [2],
         'substat': [0, 1, 3, 4, 5, 6,  7, 8, 9, 10]
     },
-    'Armor': {
+    'armor': {
         'mainstat': [4],
         'substat': [2, 3, 5, 6, 7, 8, 9, 10]
     },
-    'Necklace': {
+    'necklace': {
         'mainstat': [0, 1, 2, 3, 4, 5, 6, 7],
         'substat': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     },
-    'Ring': {
+    'ring': {
         'mainstat': [0, 1, 2, 3, 4, 5, 8, 9],
         'substat': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     },
-    'Boots': {
+    'boots': {
         'mainstat': [0, 1, 2, 3, 4, 5, 10],
         'substat': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     }

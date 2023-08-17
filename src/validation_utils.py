@@ -45,3 +45,26 @@ def validate_gear_type(gear_type):
 
     return gear_type
 
+def validate_stat_type(stat_type):
+    """
+    Validate and return stat_type parameter in lower case.
+    Raise ValueError if input for stat_type is not a string or invalid.
+    Valid inputs: 'mainstat' or 'substat' in any case (default: 'mainstat')
+    """
+    
+    # Check if it's None, default to 'mainstat'
+    if stat_type is None:
+        stat_type = 'mainstat'
+        return stat_type
+
+    # Check if it's a string
+    if not isinstance(stat_type, str):
+        raise ValueError("Stat type must be a string.")
+    
+    # Convert to lower case
+    stat_type = stat_type.lower()
+    
+    if stat_type not in ['mainstat', 'substat']:
+        raise ValueError(f"Invalid stat type '{stat_type}'. Valid stat types are: 'mainstat' or 'substat'")
+
+    return stat_type

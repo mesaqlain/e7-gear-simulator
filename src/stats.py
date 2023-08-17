@@ -4,6 +4,7 @@ from src.validation_utils import *
 
 # Import Data on STATS
 STATS = json.loads(open('data/stats.json', 'r').read())
+TYPES = json.loads(open('data/types.json', 'r').read())
 
 
 class Stat:
@@ -33,7 +34,7 @@ class Stat:
                 return STATS[stat_id]
         # Return None if the provided ID doesn't match any stat
         return None
-    
+
     def get_random_stat(self, stat_type='mainstat', gear_type=None):
         """
         Retrieves data on a random stat chosen from the pool of available
@@ -41,12 +42,16 @@ class Stat:
 
         Args:
             stat_type (str): The type of stat - 'mainstat' or 'substat only'.
-            gear_type (str): The type of gear - 'Weapon', 'Helm', 'Armor', 'Necklace',
-                'Ring', or 'Boots' only.
+            gear_type (str): The type of gear - 'weapon', 'helm', 'armor', 'necklace',
+                'ring', or 'boots' only.
 
         Returns:
             dict: Stat data
         """
+
+        # Validate inputs
+        stat_type = validate_stat_type(stat_type)
+        gear_type = validate_gear_type(gear_type)
 
         pool = []  # Initialize an empty list to store available IDs
 

@@ -16,19 +16,19 @@ class TestValidateStatID(unittest.TestCase):
             self.assertEqual(validate_stat_id(stat_id), str(stat_id))
 
     def test_valid_stat_id_int(self):
-        """Test valid stat_id when written as int """
+        """Test valid stat_id when written as int"""
         valid_stat_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         for stat_id in valid_stat_ids:
             self.assertEqual(validate_stat_id(stat_id), str(stat_id))
             
     def test_invalid_stat_id_int(self):
-        """Test invalid stat_id written as int"""
+        """Test invalid stat_id written as some negative int"""
         invalid_stat_ids = -1
         with self.assertRaises(ValueError):
             validate_stat_id(invalid_stat_ids)
                 
     def test_invalid_stat_id_str(self):
-        """Test invalid stat_id written as int"""
+        """Test invalid stat_id written as some random str"""
         invalid_stat_ids = 'Health'
         with self.assertRaises(ValueError):
             validate_stat_id(invalid_stat_ids)
@@ -46,6 +46,7 @@ class TestValidateStatID(unittest.TestCase):
             validate_stat_id(invalid_stat_ids)
 
     def test_none_gear_type(self):
+        """Test invalid stat_id when it's None"""
         with self.assertRaises(ValueError):
             validate_stat_id(None)
 

@@ -9,27 +9,27 @@
 import json
 
 GRADES = {
-    'Normal': {
+    'normal': {
         'starting_substats': 0,
         'max_substats': 4,
         'weight': 0
     },
-    'Good': {
+    'good': {
         'starting_substats': 1,
         'max_substats': 4,
         'weight': 0
     },
-    'Rare': {
+    'rare': {
         'starting_substats': 2,
         'max_substats': 4,
         'weight': 0.35
     },
-    'Heroic': {
+    'heroic': {
         'starting_substats': 3,
         'max_substats': 4,
         'weight': 0.53
     },
-    'Epic': {
+    'epic': {
         'starting_substats': 4,
         'max_substats': 4,
         'weight': 0.12
