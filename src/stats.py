@@ -70,3 +70,35 @@ class Stat:
 
         # Choose a random ID from the pool and fetch the associated stat
         return self.get_stat_by_id(stat_id=random.choice(pool))
+
+    def get_non_overlapping_stat(
+        self, selected_stats=[], stat_type='substat', gear_type=None):
+        """
+        Retrieves a new stat that is not already in the selected list of stats.
+
+        Args:
+            selected_stats (list): List containing Stat objects (default: empty list [])
+            stat_type (str): The type of stat - 'mainstat' or 'substat only' (default: 'substat')
+                (in almost every case it will be 'substat' for this function, hence default)
+            gear_type (str): The type of gear - 'weapon', 'helm', 'armor', 'necklace',
+                    'ring', or 'boots' only. (default: None)
+
+        Returns:
+            dict: Stat data
+        """
+
+        # Validate inputs:
+        selected_stats = validate_selected_stats(selected_stats)
+        stat_type = validate_stat_type(stat_type)
+        gear_type = validate_gear_type(gear_type)
+
+        # Get a random stat
+        stat = self.get_random_stat(stat_type, gear_type)
+
+        # If the stat we got in the previous line exists in our selected stats,
+        # get a new random stat
+        while any(stat['id'] == a['id'] for a in selected_stats):
+            # Get a new random stat as long as above condition is True
+            stat = self.get_random_stat(stat_type, gear_type)
+
+        return stat
