@@ -69,6 +69,18 @@ class TestStat(unittest.TestCase):
         with self.assertRaises(ValueError): 
             self.stat.get_stat_by_id(None)
     
+    def test_valid_int_stat_id_stored_val(self):
+        """Test whether the Stat object holds the correct selected_stat_id with a valid int input"""
+        stat = self.stat.get_stat_by_id(0)
+        expected_id = '0'
+        self.assertEqual(self.stat.selected_stat_id, expected_id, "Valid int stat ID should return selected_stat_id of '0'")
 
+    def test_valid_str_stat_id_stored_val(self):
+        """Test whether the Stat object holds the correct selected_stat_id with a valid str input"""
+        stat = self.stat.get_stat_by_id('7')
+        expected_id = '7'
+        self.assertEqual(self.stat.selected_stat_id, expected_id, "Valid int stat ID should return selected_stat_id of '0'")
+
+        
 if __name__ == '__main__':
     unittest.main()

@@ -18,7 +18,7 @@ class TestNonOverlappingStat(unittest.TestCase):
 
         # Generate 1000 random stats for 'weapon' gear type
         for _ in range(1000):
-            stat = get_non_overlapping_stat(selected_stats)
+            stat = test_get_non_overlapping_stat(selected_stats)
             selected_stat_ids.add(str(stat['id']))  # Convert id to string before adding to set
             # Verify that the generated stat is a valid entry in STATS
             self.assertTrue(stat in STATS.values(), f"Generated stat has an invalid ID: {stat['id']}")
@@ -38,7 +38,7 @@ class TestNonOverlappingStat(unittest.TestCase):
 
         # Generate 1000 random stats for 'weapon' gear type
         for _ in range(1000):
-            stat = get_non_overlapping_stat(selected_stats)
+            stat = test_get_non_overlapping_stat(selected_stats)
             selected_stat_ids.add(str(stat['id']))  # Convert id to string before adding to set
             # Verify that the generated stat is a valid entry in STATS
             self.assertTrue(stat in STATS.values(), f"Generated stat has an invalid ID: {stat['id']}")
@@ -54,19 +54,19 @@ class TestNonOverlappingStat(unittest.TestCase):
         
     def test_non_overlapping_stat_single(self):
         """Test whether all stats other than the chosen stat is selected at least once"""
-        selected_stats = [get_random_stat()]
-        selected_stat_id = str(selected_stats[0]['id'])
+        selected_stats = [random.choice([str(key) for key in STATS.keys()])]
+        selected_stat_ids = set(selected_stats)
         non_overlapping_stat_ids = set()
 
         # Generate 1000 random stats for 'weapon' gear type
         for _ in range(1000):
-            stat = get_non_overlapping_stat(selected_stats)
+            stat = test_get_non_overlapping_stat(selected_stats)
             non_overlapping_stat_ids.add(str(stat['id']))  # Convert id to string before adding to set
             # Verify that the generated stat is a valid entry in STATS
             self.assertTrue(stat in STATS.values(), f"Generated stat has an invalid ID: {stat['id']}")
 
         # Ensure that all other id's are selected
-        expected_stat_ids = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'} - {selected_stat_id}  # Use set difference
+        expected_stat_ids = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'} - selected_stat_ids  # Use set difference
         missing_stat_ids = expected_stat_ids - non_overlapping_stat_ids
         extra_stat_ids = non_overlapping_stat_ids - expected_stat_ids
 
@@ -75,13 +75,13 @@ class TestNonOverlappingStat(unittest.TestCase):
         
     def test_non_overlapping_stat_two_elements(self):
         """Test whether all stats other than the chosen two stats are selected at least once"""
-        selected_stats = [STATS['10'], STATS['3']]
-        selected_stat_ids = {'5', '3'} # id's we don't expect to see
+        selected_stats = [10, 3]
+        selected_stat_ids = set(selected_stats) # id's we don't expect to see
         non_overlapping_stat_ids = set()
 
         # Generate 1000 non-overlapping stats 
         for _ in range(1000):
-            stat = get_non_overlapping_stat(selected_stats)
+            stat = test_get_non_overlapping_stat(selected_stats)
             non_overlapping_stat_ids.add(str(stat['id']))  # Convert id to string before adding to set
             # Verify that the generated stat is a valid entry in STATS
             self.assertTrue(stat in STATS.values(), f"Generated stat has an invalid ID: {stat['id']}")
@@ -97,13 +97,13 @@ class TestNonOverlappingStat(unittest.TestCase):
         
     def test_non_overlapping_stat_three_elements(self):
         """Test whether all stats other than the chosen three stats are selected at least once"""
-        selected_stats = [STATS['1'], STATS['7'], STATS['10']]
+        selected_stats = [1, 7, 10]
         selected_stat_ids = {'1', '7', '10'} # id's we don't expect to see
         non_overlapping_stat_ids = set()
 
         # Generate 1000 non-overlapping stats 
         for _ in range(1000):
-            stat = get_non_overlapping_stat(selected_stats)
+            stat = test_get_non_overlapping_stat(selected_stats)
             non_overlapping_stat_ids.add(str(stat['id']))  # Convert id to string before adding to set
             # Verify that the generated stat is a valid entry in STATS
             self.assertTrue(stat in STATS.values(), f"Generated stat has an invalid ID: {stat['id']}")
@@ -121,13 +121,13 @@ class TestNonOverlappingStat(unittest.TestCase):
         Test whether all stats other than the selected stats (considering gear_type restrictions)
         are chosen at least once. We use weapon as a gear type, which may never have DEF and DEF%
         """
-        selected_stats = [STATS['1'], STATS['7'], STATS['10']]
+        selected_stats = ['1', '7', '10']
         selected_stat_ids = {'1', '7', '10', '0', '4', '5'} # id's we don't expect to see because of doubles + gear restriction
         non_overlapping_stat_ids = set()
 
         # Generate 1000 non-overlapping stats 
         for _ in range(1000):
-            stat = get_non_overlapping_stat(selected_stats, gear_type='weapon')
+            stat = test_get_non_overlapping_stat(selected_stats, gear_type='weapon')
             non_overlapping_stat_ids.add(str(stat['id']))  # Convert id to string before adding to set
             # Verify that the generated stat is a valid entry in STATS
             self.assertTrue(stat in STATS.values(), f"Generated stat has an invalid ID: {stat['id']}")

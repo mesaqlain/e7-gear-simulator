@@ -19,7 +19,14 @@ class TestStat(unittest.TestCase):
     def test_get_random_stat(self):
         """Test whether the randomly generated stats is in the STATS dictionary"""
         stat = self.stat.get_random_stat()
+        stat_id = self.stat.stat_id
+        stat_type = self.stat.stat_type
+        gear_type = self.stat.gear_type
         self.assertIn(stat, STATS.values(), "Generated random stat should be in the STATS dictionary")
+        self.assertIn(stat_id, STATS.keys(), "Generated random stat should have id from the STATS dict")
+        self.assertIn(stat_type, 'mainstat', "Generated random stat should have stat_type = 'mainstat' if None")
+        self.assertIsNone(gear_type, "Generated random stat should have gear_type None if None")
+
         
     def test_all_stats_selected(self):
         """Test whether all stats are selected at least once in 1000 random selections"""
@@ -28,10 +35,18 @@ class TestStat(unittest.TestCase):
         for _ in range(1000):
             stat = self.stat.get_random_stat()
             selected_stat_ids.add(str(stat['id']))  # Add the ID of the selected stat
+            stat = self.stat.get_random_stat()
+            stat_id = self.stat.stat_id
+            stat_type = self.stat.stat_type
+            gear_type = self.stat.gear_type
+            self.assertIn(stat, STATS.values(), "Generated random stat should be in the STATS dictionary")
+            self.assertIn(stat_id, STATS.keys(), "Generated random stat should have id from the STATS dict")
+            self.assertIn(stat_type, 'mainstat', "Generated random stat should have stat_type = 'mainstat' if None")
+            self.assertIsNone(gear_type, "Generated random stat should have gear_type None if None")
 
         missing_stat_ids = set(STATS.keys()) - selected_stat_ids
         self.assertFalse(missing_stat_ids, f"The following stat IDs were not selected: {missing_stat_ids}")
-        
+
         
     def test_all_stats_selected_2(self):
         """Test whether all stats are selected at least once in 1000 random selections by specifying stat_type = 'mainstat'"""
@@ -40,6 +55,14 @@ class TestStat(unittest.TestCase):
         for _ in range(1000):
             stat = self.stat.get_random_stat(stat_type = 'mainstat')
             selected_stat_ids.add(str(stat['id']))  # Add the ID of the selected stat
+            stat = self.stat.get_random_stat()
+            stat_id = self.stat.stat_id
+            stat_type = self.stat.stat_type
+            gear_type = self.stat.gear_type
+            self.assertIn(stat, STATS.values(), "Generated random stat should be in the STATS dictionary")
+            self.assertIn(stat_id, STATS.keys(), "Generated random stat should have id from the STATS dict")
+            self.assertIn(stat_type, 'mainstat', "Generated random stat should have stat_type = 'mainstat' if None")
+            self.assertIsNone(gear_type, "Generated random stat should have gear_type None if None")
 
         missing_stat_ids = set(STATS.keys()) - selected_stat_ids
         self.assertFalse(missing_stat_ids, f"The following stat IDs were not selected: {missing_stat_ids}")
@@ -389,6 +412,29 @@ class TestStat(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.stat.get_random_stat(stat_type='Sword', gear_type=111)
 
-    
+    def test_ring_gear_type_mainstat_selected_stat_id(self):
+        """
+        Test whether a randomly selected stat for 'ring' gear type and stat_type = 'mainstat'
+        holds the correct id value in self.selected_stat
+        """
+        for _ in range(1000):
+            stat = self.stat.get_random_stat(stat_type='mainstat',gear_type='ring')
+            expected_id = str(stat['id'])
+            self.assertEqual(self.stat.stat_id, expected_id, f"Valid int stat ID should return selected_stat_id {expected_id}")
+            self.assertEqual(self.stat.stat_type, 'mainstat', f"Valid int stat ID should return stat type 'mainstat'")
+            self.assertEqual(self.stat.gear_type, 'ring', f"Valid int stat ID should return gear type 'ring'")
+
+    def test_helm_gear_type_substat_selected_stat_id(self):
+        """
+        Test whether a randomly selected stat for 'helm' gear type and stat_type = 'substat'
+        holds the correct id value in self.selected_stat
+        """
+        for _ in range(1000):
+            stat = self.stat.get_random_stat(stat_type='substat',gear_type='helm')
+            expected_id = str(stat['id'])
+            self.assertEqual(self.stat.stat_id, expected_id, f"Valid int stat ID should return selected_stat_id of {expected_id}")
+            self.assertEqual(self.stat.stat_type, 'substat', f"Valid int stat ID should return stat type 'substat'")
+            self.assertEqual(self.stat.gear_type, 'helm', f"Valid int stat ID should return gear type 'helm'")
+
 if __name__ == '__main__':
     unittest.main()

@@ -45,11 +45,13 @@ def validate_gear_type(gear_type):
 
     return gear_type
 
-def validate_stat_type(stat_type):
+def validate_stat_type(stat_type, mod = False):
     """
     Validate and return stat_type parameter in lower case.
     Raise ValueError if input for stat_type is not a string or invalid.
-    Valid inputs: 'mainstat' or 'substat' in any case (default: 'mainstat')
+    Args:
+        stat_type (str): 'mainstat' or 'substat' in any case (default: 'mainstat')
+        mod (bool, optional): True or False, set to True if this is a modded stat
     """
     
     # Check if it's None, default to 'mainstat'
@@ -66,7 +68,10 @@ def validate_stat_type(stat_type):
     
     if stat_type not in ['mainstat', 'substat']:
         raise ValueError(f"Invalid stat type '{stat_type}'. Valid stat types are: 'mainstat' or 'substat'")
-
+        
+    if stat_type == 'mainstat' and mod:
+        raise ValueError("Mainstats cannot be modded")
+        
     return stat_type
 
 def is_valid_stat_entry(stat_entry):
@@ -85,11 +90,11 @@ def is_valid_stat_entry(stat_entry):
 def validate_selected_stats(selected_stats):
     """
     Validate and return selected_stats parameter used in get_non_overlapping_function().
-    Accepts lists with valid stat entries.
+    Accepts lists with valid stat id's.
     Empty list or None returns an empty list.
 
     Returns:
-        list: empty or contains valid Stat entries
+        list: empty or contains valid stat id's
     """
 
     # Check if it's None - return empty list
@@ -98,9 +103,68 @@ def validate_selected_stats(selected_stats):
 
     # Check if it's a string
     if not isinstance(selected_stats, list):
-        raise ValueError("Selected Stats must be entered as a list.")
+        raise ValueError("Selected stat_id's must be entered as a list.")
 
-    if not all(is_valid_stat_entry(entry) for entry in selected_stats):
+    # Check if all strings in the list are valid keys in STATS
+    valid_keys = [str(key) for key in STATS.keys()]
+    if not all(str(entry) in valid_keys for entry in selected_stats):
         raise ValueError("Invalid entry in the selected stats list.")
 
     return selected_stats
+
+def validate_rolled(rolled):
+    """
+    Validate and return rolled parameter.
+    Raise ValueError if rolled is not an int in [0, 5].
+    Valid inputs: 0, 1, 2, 3, 4, 5 (default: 0)
+    
+    Args:
+        rolled (int): how many times a stat rolled 
+    """
+    # Check if it's None
+    if rolled is None:
+        return 0
+    
+    # Check if it's an int
+    if not isinstance(rolled, int) or rolled not in range(6):
+        raise ValueError("Rolled count must be integer in [0, 5].")
+        
+    return rolled
+
+def validate_mod(mod):
+    """
+    Validates the mod parameter.
+    
+    Args:
+        mod (bool): The mod parameter value.
+        
+    Returns:
+        bool: The validated mod parameter value.
+        
+    Raises:
+        ValueError: If mod is not a boolean value.
+    """
+    if mod is None or not isinstance(mod, bool):
+        raise ValueError("Mod parameter must be a boolean value (True or False).")
+    return mod
+
+def validate_mod_type(mod_type):
+    """
+    Validates the mod_type parameter.
+    
+    Args:
+        mod_type (str): 'greater' or 'lesser' (the type of modification gem stone being used)
+        
+    Returns:
+        str: 'greater' or 'lesser' (default: 'greater')
+        
+    Raises:
+        ValueError: If mod is not a str and 'greater' or 'lesser'.
+    """
+    if mod_type is None:
+        mod_type = 'greater'
+        
+    if not isinstance(mod_type, str) or mod_type.lower() not in ['greater', 'lesser']:
+        raise ValueError("Mod type must be a str containing 'greater' or 'lesser'.")
+    
+    return mod_type.lower()

@@ -63,13 +63,13 @@ def get_random_stat(stat_type='mainstat', gear_type=None):
     return get_stat_by_id(stat_id=random.choice(pool))
 
 
-def get_non_overlapping_stat(
+def test_get_non_overlapping_stat(
         selected_stats=[], stat_type='substat', gear_type=None):
     """
     Retrieves a new stat that is not already in the selected list of stats.
 
     Args:
-        selected_stats (list): List containing Stat objects (default: empty list [])
+        selected_stats (list): List containing stat id's (default: empty list [])
         stat_type (str): The type of stat - 'mainstat' or 'substat only' (default: 'substat')
             (in almost every case it will be 'substat' for this function, hence default)
         gear_type (str): The type of gear - 'weapon', 'helm', 'armor', 'necklace',
@@ -89,8 +89,27 @@ def get_non_overlapping_stat(
 
     # If the stat we got in the previous line exists in our selected stats,
     # get a new random stat
-    while any(stat['id'] == a['id'] for a in selected_stats):
+    while any(stat['id'] == int(a) for a in selected_stats):
         # Get a new random stat as long as above condition is True
         stat = get_random_stat(stat_type, gear_type)
 
     return stat
+
+
+def get_reforge_increase(stat_id, stat_type, rolled):
+    """
+    Get the value by which a stat will increase by when an item has been reforged.
+    
+    Args:
+        stat_type (str): 'mainstat' or 'substat'
+        rolled (int): value between 0 and 5.
+    """
+    # Validate inputs
+    stat_id = validate_stat_id(stat_id)
+    stat_type = validate_stat_type(stat_type)
+    rolled = validate_rolled(rolled)
+    
+    # Get reforge_increase value
+    reforge_increase = STATS[stat_id]['reforge'][stat_type][rolled]
+    
+    return reforge_increase
