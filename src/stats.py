@@ -1,10 +1,13 @@
 import json
 import random
 from src.validation_utils import *
+from src.utilities import *
 
-# Import Data on STATS
+# Import Data 
 STATS = json.loads(open('data/stats.json', 'r').read())
 TYPES = json.loads(open('data/types.json', 'r').read())
+GRADES = json.loads(open('data/grades.json', 'r').read())
+TIERS = json.loads(open('data/tiers.json', 'r').read())
 
 
 class Stat:
@@ -24,12 +27,25 @@ class Stat:
         """
         self.data = None
         self.stat_id = None
+        self.stat_key = None
         self.stat_type = 'mainstat'
         self.gear_type = None
-        self.rolled = None
+        self.gear_grade = None
+        self.gear_level = 85
+        self.gear_tier = None
+        self.rolled = 0
         self.reforge_increase = None
+        self.text = None
+        self.value = None
+        self.value_key = None
+        self.modded = False
+        
+    def __str__(self):
+        """Str representation of class"""
+        return f"ID: {self.stat_id}\nStat: {self.stat_key}\nType: {self.stat_type}\nGear: {self.gear_type}\nRolled Count: {self.rolled}\nReforge Value: {self.reforge_increase}"
+        
 
-    def get_stat_by_id(self, stat_id):
+    def get_stat_by_id(self, stat_id, stat_type=None, gear_type=None):
         """
         Retrieves stat data based on given ID.
 
@@ -47,11 +63,22 @@ class Stat:
             if str(stat_data['id']) == stat_id:
                 # Store the selected_stat_id value
                 self.stat_id = stat_id
+                self.stat_key = str(stat_data['key_stat'])
+                
+                # Assign class attributes if values are provided
+                if stat_type is not None:
+                    self.stat_type = validate_stat_type(stat_type)
+                if gear_type is not None:
+                    self.gear_type = validate_gear_type(gear_type)
+
                 # Return the stat dictionary associated with the ID
                 return stat_data
-        # Return None if the provided ID doesn't match any stat
-        return None
+            
+        
+        # Raise a ValueError if the provided ID doesn't match any stat
+        raise ValueError(f"No stat found with ID {stat_id}")
 
+    
     def get_random_stat(self, stat_type='mainstat', gear_type=None):
         """
         Retrieves data on a random stat chosen from the pool of available
@@ -90,10 +117,12 @@ class Stat:
 
         # Set the class attribute
         self.stat_id = str(random_stat['id'])
+        self.stat_key = str(random_stat['key_stat'])
         self.stat_type = stat_type
         self.gear_type = gear_type
 
         return random_stat
+
 
     def get_non_overlapping_stat(
         self, selected_stats=[], stat_type='substat', gear_type=None):
@@ -127,25 +156,100 @@ class Stat:
 
         # Set the selected_stat_id attribute
         self.stat_id = str(random_stat['id'])
+        self.stat_key = str(random_stat['key_stat'])
         self.stat_type = stat_type
         self.gear_type = gear_type
 
         return random_stat
     
-    def get_reforge_increase(self, rolled):
+
+#     def get_reforge_increase(self, rolled):
+#         """
+#         Get the value by which a stat will increase by when an item has been reforged.
+#         (This function has been moved outside of the Stat class to utilities.py)
+
+#         Args:
+#             rolled (int): value between 0 and 5; how many times a stat rolled when enhancing
+#         """
+#         # Validate inputs
+#         rolled = validate_rolled(rolled)
+        
+#         if self.stat_id is not None and self.stat_id in STATS:
+#         # Get reforge_increase value
+#             self.reforge_increase = STATS[self.stat_id]['reforge'][self.stat_type][rolled]
+#             return self.reforge_increase
+#         else:
+#             raise ValueError("Invalid stat_id or missing self.stat_id")
+        
+
+    def parse_stat(self, stat_type=None, gear_type=None, gear_grade=None, 
+                   gear_level=85, mod=False, rolled=None, mod_type='greater'):
         """
-        Get the value by which a stat will increase by when an item has been reforged.
+        Parses a stat based on its type ('substat' or 'mainstat') and given gear grade and level.
+        Also checks whether modification is being applied and parses the appropriate mod value based on rolled count.
 
         Args:
-            rolled (int): value between 0 and 5; how many times a stat rolled when enhancing
+            stat_type (str): The type of stat - 'mainstat' or 'substat only' (default: 'substat')
+            gear_type (str): The type of gear - 'weapon', 'helm', 'armor', 'necklace',
+                'ring', or 'boots' only.
+            gear_grade (str): grade of the gear - 'normal', 'good', 'rare', 'heroic', 'epic' (default: None)
+            gear_level (int): level of gear, between 58 and 100 (default: 85)
+            mod (bool): boolean specifying whether this is a modded stat or not (default: False)
+            rolled (int): number of times a stat has been rolled when enhancing (default: None = 0)
+            mod_type (str): type of modification - 'greater' or 'lower' (default: 'greater')
+
+        Returns:
+            dict: parsed Stat data
         """
-        # Validate inputs
-        rolled = validate_rolled(rolled)
+
+        # Check if stat exists before trying to parse it
+        if self.stat_id is None:
+            raise ValueError("Cannot parse until a stat has been fetched.")
+
+        # Use the specified gear_type if provided, otherwise use the class attribute
+        if gear_type is not None:
+            self.gear_type = validate_gear_type(gear_type)
+
+        # Use the specified stat_type if provided, otherwise use the class attribute
+        if stat_type is not None:
+            self.stat_type = validate_stat_type(stat_type, mod = mod, rolled = rolled)
+            
+        # Get the corresponding stat from stats dict based on id
+        stat = STATS[self.stat_id]
         
-        if self.stat_id is not None and self.stat_id in STATS:
-        # Get reforge_increase value
-            self.reforge_increase = STATS[self.stat_id]['reforge'][self.stat_type][rolled]
-            return self.reforge_increase
+        # Validate inputs and assign attributes:
+        self.text = stat['text']
+        self.gear_grade = validate_gear_grade(gear_grade)
+        self.gear_level = validate_gear_level(gear_level)
+        self.gear_tier = get_gear_tier(gear_level)
+        self.rolled = validate_rolled(rolled, self.stat_type)
+        mod = validate_mod(mod)
+        mod_type = validate_mod_type(mod_type)
+        
+
+
+        # Parse modified stat
+        if mod:
+            self.modded = True
+            value = get_mod_value(
+                self.stat_id,
+                self.gear_level,
+                self.rolled,
+                mod_type)
+        # Parse non-modified stat
         else:
-            raise ValueError("Invalid stat_id or missing self.stat_id")
-        
+            value = get_stat_value(
+                self.stat_id,
+                self.stat_type,
+                self.gear_level,
+                self.gear_grade)
+
+        # Assign Parsed attributes
+        self.value = value
+        self.value_key = stat['vars'][self.stat_type]['key']
+
+        # Reforge increase value
+        self.reforge_increase = get_reforge_increase(
+            self.stat_id, self.stat_type, self.rolled)
+
+        return self

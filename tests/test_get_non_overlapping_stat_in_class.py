@@ -26,13 +26,16 @@ class TestNonOverlappingStatInClass(unittest.TestCase):
         for _ in range(1000):
             stat = self.stat.get_non_overlapping_stat(selected_stats)
             selected_stat_ids.add(str(stat['id']))  # Convert id to string before adding to set
+            expected_key = stat['key_stat']
             # Verify that the generated stat is a valid entry in STATS
             self.assertTrue(stat in STATS.values(), f"Generated stat has an invalid ID: {stat['id']}")
             stat_id = self.stat.stat_id
-            stat_type = self.stat.stat_type
-            gear_type = self.stat.gear_type
             self.assertIn(stat_id, STATS.keys(), "Non-overlapping-stat should have id from the STATS dict")
+            stat_key = self.stat.stat_key
+            self.assertEqual(stat_key, expected_key, f"Non-overlapping-stat should have key {expected_key}")
+            stat_type = self.stat.stat_type
             self.assertIn(stat_type, 'substat', "Non-overlapping-stat should have stat_type = 'substat' if None")
+            gear_type = self.stat.gear_type
             self.assertIsNone(gear_type, "Non-overlapping-stat should have gear_type None if None")
 
 
@@ -53,6 +56,7 @@ class TestNonOverlappingStatInClass(unittest.TestCase):
         for _ in range(1000):
             stat = self.stat.get_non_overlapping_stat(selected_stats)
             selected_stat_ids.add(str(stat['id']))  # Convert id to string before adding to set
+            expected_key = stat['key_stat']
             # Verify that the generated stat is a valid entry in STATS
             self.assertTrue(stat in STATS.values(), f"Generated stat has an invalid ID: {stat['id']}")
             stat_id = self.stat.stat_id
@@ -61,6 +65,8 @@ class TestNonOverlappingStatInClass(unittest.TestCase):
             self.assertIn(stat_id, STATS.keys(), "Non-overlapping-stat should have id from the STATS dict")
             self.assertIn(stat_type, 'substat', "Non-overlapping-stat should have stat_type = 'mainstat' if None")
             self.assertIsNone(gear_type, "Non-overlapping-stat should have gear_type None if None")
+            stat_key = self.stat.stat_key
+            self.assertEqual(stat_key, expected_key, f"Non-overlapping-stat should have key {expected_key}")
 
 
         # Ensure that all id's are selected
@@ -85,6 +91,7 @@ class TestNonOverlappingStatInClass(unittest.TestCase):
         for _ in range(1000):
             stat = self.stat.get_non_overlapping_stat(selected_stats)
             non_overlapping_stat_ids.add(str(stat['id']))  # Convert id to string before adding to set
+            expected_key = stat['key_stat']
             # Verify that the generated stat is a valid entry in STATS
             self.assertTrue(stat in STATS.values(), f"Generated stat has an invalid ID: {stat['id']}")
             stat_id = self.stat.stat_id
@@ -93,7 +100,8 @@ class TestNonOverlappingStatInClass(unittest.TestCase):
             self.assertIn(stat_id, STATS.keys(), "Non-overlapping-stat should have id from the STATS dict")
             self.assertIn(stat_type, 'substat', "Non-overlapping-stat should have stat_type = 'substat' if None")
             self.assertIsNone(gear_type, "Non-overlapping-stat should have gear_type None if None")
-
+            stat_key = self.stat.stat_key
+            self.assertEqual(stat_key, expected_key, f"Non-overlapping-stat should have key {expected_key}")
 
         # Ensure that all other id's are selected
         expected_stat_ids = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'} - selected_stat_ids  # Use set difference
@@ -115,6 +123,7 @@ class TestNonOverlappingStatInClass(unittest.TestCase):
         for _ in range(1000):
             stat = self.stat.get_non_overlapping_stat(selected_stats)
             non_overlapping_stat_ids.add(str(stat['id']))  # Convert id to string before adding to set
+            expected_key = stat['key_stat']
             # Verify that the generated stat is a valid entry in STATS
             self.assertTrue(stat in STATS.values(), f"Generated stat has an invalid ID: {stat['id']}")
             stat_id = self.stat.stat_id
@@ -123,6 +132,8 @@ class TestNonOverlappingStatInClass(unittest.TestCase):
             self.assertIn(stat_id, STATS.keys(), "Non-overlapping-stat should have id from the STATS dict")
             self.assertIn(stat_type, 'substat', "Non-overlapping-stat should have stat_type = 'substat' if None")
             self.assertIsNone(gear_type, "Non-overlapping-stat should have gear_type None if None")
+            stat_key = self.stat.stat_key
+            self.assertEqual(stat_key, expected_key, f"Non-overlapping-stat should have key {expected_key}")
 
         # Ensure that all other id's are selected
         expected_stat_ids = {'0', '1', '2', '4', '5', '6', '7', '8', '9'}  
@@ -146,6 +157,7 @@ class TestNonOverlappingStatInClass(unittest.TestCase):
         for _ in range(1000):
             stat = self.stat.get_non_overlapping_stat(selected_stats)
             non_overlapping_stat_ids.add(str(stat['id']))  # Convert id to string before adding to set
+            expected_key = stat['key_stat']
             # Verify that the generated stat is a valid entry in STATS
             self.assertTrue(stat in STATS.values(), f"Generated stat has an invalid ID: {stat['id']}")
             stat_id = self.stat.stat_id
@@ -154,7 +166,9 @@ class TestNonOverlappingStatInClass(unittest.TestCase):
             self.assertIn(stat_id, STATS.keys(), "Non-overlapping-stat should have id from the STATS dict")
             self.assertIn(stat_type, 'substat', "Non-overlapping-stat should have stat_type = 'substat' if None")
             self.assertIsNone(gear_type, "Non-overlapping-stat should have gear_type None if None")
-
+            stat_key = self.stat.stat_key
+            self.assertEqual(stat_key, expected_key, f"Non-overlapping-stat should have key {expected_key}")
+            
         # Ensure that all other id's are selected
         expected_stat_ids = {'0', '1', '2', '3', '5', '7', '8', '9', '10'}  
         missing_stat_ids = expected_stat_ids - non_overlapping_stat_ids
@@ -177,6 +191,7 @@ class TestNonOverlappingStatInClass(unittest.TestCase):
         for _ in range(1000):
             stat = self.stat.get_non_overlapping_stat(selected_stats)
             non_overlapping_stat_ids.add(str(stat['id']))  # Convert id to string before adding to set
+            expected_key = stat['key_stat']
             # Verify that the generated stat is a valid entry in STATS
             self.assertTrue(stat in STATS.values(), f"Generated stat has an invalid ID: {stat['id']}")
             stat_id = self.stat.stat_id
@@ -185,7 +200,8 @@ class TestNonOverlappingStatInClass(unittest.TestCase):
             self.assertIn(stat_id, STATS.keys(), "Non-overlapping-stat should have id from the STATS dict")
             self.assertIn(stat_type, 'substat', "Non-overlapping-stat should have stat_type = 'substat' if None")
             self.assertIsNone(gear_type, "Non-overlapping-stat should have gear_type None if None")
-
+            stat_key = self.stat.stat_key
+            self.assertEqual(stat_key, expected_key, f"Non-overlapping-stat should have key {expected_key}")
 
         # Ensure that all other id's are selected
         expected_stat_ids = {'0', '2', '3', '4', '5', '6', '8', '9'}  
@@ -209,6 +225,7 @@ class TestNonOverlappingStatInClass(unittest.TestCase):
         for _ in range(1000):
             stat = self.stat.get_non_overlapping_stat(selected_stats, gear_type='weapon')
             non_overlapping_stat_ids.add(str(stat['id']))  # Convert id to string before adding to set
+            expected_key = stat['key_stat']
             # Verify that the generated stat is a valid entry in STATS
             self.assertTrue(stat in STATS.values(), f"Generated stat has an invalid ID: {stat['id']}")
             stat_id = self.stat.stat_id
@@ -217,8 +234,10 @@ class TestNonOverlappingStatInClass(unittest.TestCase):
             self.assertIn(stat_id, STATS.keys(), "Non-overlapping-stat should have id from the STATS dict")
             self.assertIn(stat_type, 'substat', "Non-overlapping-stat should have stat_type = 'substat' if None")
             self.assertIn(gear_type, 'weapon', "Non-overlapping-stat should have gear type = 'weapon'")
+            stat_key = self.stat.stat_key
+            self.assertEqual(stat_key, expected_key, f"Non-overlapping-stat should have key {expected_key}")
 
-        # Ensure that all other id's are selected
+            # Ensure that all other id's are selected
         expected_stat_ids = {'2', '3', '6', '8', '9'}  
         missing_stat_ids = expected_stat_ids - non_overlapping_stat_ids
         extra_stat_ids = non_overlapping_stat_ids - expected_stat_ids
@@ -238,10 +257,12 @@ class TestNonOverlappingStatInClass(unittest.TestCase):
         for _ in range(1000):
             stat = self.stat.get_non_overlapping_stat(selected_stats, gear_type='weapon')
             expected_id = (str(stat['id']))  # Convert id to string before adding to set
+            expected_key = str(stat['key_stat'])
             expected_stat_type = 'substat'
             expected_gear_type = 'weapon'
             # Verify that the generated stat is a valid entry in STATS
             self.assertEqual(self.stat.stat_id, expected_id, f"Valid int stat ID should return stat_id of {expected_id}")
+            self.assertEqual(self.stat.stat_key, expected_key, f"Non-overlapping-stat should have key {expected_key}")
             self.assertEqual(self.stat.stat_type, expected_stat_type, f"Valid int stat ID should return stat_type of {expected_stat_type}")
             self.assertEqual(self.stat.gear_type, expected_gear_type, f"Valid int stat ID should return gear_type of {expected_gear_type}")
         

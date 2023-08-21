@@ -73,13 +73,17 @@ class TestStat(unittest.TestCase):
         """Test whether the Stat object holds the correct selected_stat_id with a valid int input"""
         stat = self.stat.get_stat_by_id(0)
         expected_id = '0'
-        self.assertEqual(self.stat.selected_stat_id, expected_id, "Valid int stat ID should return selected_stat_id of '0'")
+        expected_key = 'attack_flat'
+        self.assertEqual(self.stat.stat_id, expected_id, "Valid int stat ID should return expected_id of '0'")
+        self.assertEqual(self.stat.stat_key, expected_key, "Valid int stat ID should return expected_key of 'attack_flat'")
 
     def test_valid_str_stat_id_stored_val(self):
         """Test whether the Stat object holds the correct selected_stat_id with a valid str input"""
         stat = self.stat.get_stat_by_id('7')
         expected_id = '7'
-        self.assertEqual(self.stat.selected_stat_id, expected_id, "Valid int stat ID should return selected_stat_id of '0'")
+        expected_key = 'crit_damage'
+        self.assertEqual(self.stat.stat_id, expected_id, "Valid int stat ID should return selected_stat_id of '0'")
+        self.assertEqual(self.stat.stat_key, expected_key, "Valid int stat ID should return expected_key of 'crit_damage'")
 
         
 if __name__ == '__main__':

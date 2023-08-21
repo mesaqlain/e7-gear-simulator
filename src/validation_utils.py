@@ -1,4 +1,7 @@
 import json
+import random
+from src.utilities import *
+
 
 # Import data
 TYPES = json.loads(open('data/types.json', 'r').read())
@@ -45,7 +48,8 @@ def validate_gear_type(gear_type):
 
     return gear_type
 
-def validate_stat_type(stat_type, mod = False):
+
+def validate_stat_type(stat_type, mod = False, rolled = 0):
     """
     Validate and return stat_type parameter in lower case.
     Raise ValueError if input for stat_type is not a string or invalid.
@@ -72,7 +76,11 @@ def validate_stat_type(stat_type, mod = False):
     if stat_type == 'mainstat' and mod:
         raise ValueError("Mainstats cannot be modded")
         
+    if rolled != 0 and stat_type == 'mainstat':
+        raise ValueError("Mainstats cannot have rolled values.")
+        
     return stat_type
+
 
 def is_valid_stat_entry(stat_entry):
     """
@@ -86,6 +94,7 @@ def is_valid_stat_entry(stat_entry):
         boolean: True or False
     """
     return isinstance(stat_entry, dict) and 'id' in stat_entry and 'text' in stat_entry and 'key_stat' in stat_entry
+
 
 def validate_selected_stats(selected_stats):
     """
@@ -112,7 +121,8 @@ def validate_selected_stats(selected_stats):
 
     return selected_stats
 
-def validate_rolled(rolled):
+
+def validate_rolled(rolled, stat_type='substat'):
     """
     Validate and return rolled parameter.
     Raise ValueError if rolled is not an int in [0, 5].
@@ -129,7 +139,11 @@ def validate_rolled(rolled):
     if not isinstance(rolled, int) or rolled not in range(6):
         raise ValueError("Rolled count must be integer in [0, 5].")
         
+    if stat_type == 'mainstat' and rolled !=0:
+        raise ValueError("Mainstats cannot have rolled values.")
+        
     return rolled
+
 
 def validate_mod(mod):
     """
@@ -147,6 +161,7 @@ def validate_mod(mod):
     if mod is None or not isinstance(mod, bool):
         raise ValueError("Mod parameter must be a boolean value (True or False).")
     return mod
+
 
 def validate_mod_type(mod_type):
     """
@@ -168,3 +183,47 @@ def validate_mod_type(mod_type):
         raise ValueError("Mod type must be a str containing 'greater' or 'lesser'.")
     
     return mod_type.lower()
+
+
+def validate_gear_grade(gear_grade):
+    """
+    Validates gear_grade by checking if the grade is one of the values stored in GRADES.keys().
+    Currently  ['normal', 'good', 'rare', 'heroic', 'epic'] If no
+    If no gear_grade provided, get a random gear_grade
+    Args:
+        gear_grade (str): spcify gear grade
+        
+    Returns:
+        gear_grade (str)
+    """
+    
+    # Get a random gear_grade if none provided
+    if gear_grade is None:
+        gear_grade = get_random_grade()
+    
+    valid_gear_grades = list(GRADES.keys())
+    
+    if not isinstance(gear_grade, str) or gear_grade.lower() not in valid_gear_grades:
+        raise ValueError("Gear grade must be a str from 'normal', 'good', 'rare', 'heroic', 'epic'")
+    
+    return gear_grade.lower()
+
+
+def validate_gear_level(gear_level):
+    """
+    Validates gear_level by checking if the input is an int in range(58,101).
+    Default value is 85 if none provided.
+    
+    Args:
+        gear_level (int): Lvl (or item/gear level) of the gear (default 85)
+        
+    Returns:
+        gear_level (int)
+    """
+    if gear_level is None:
+        gear_level = 85
+    
+    if not isinstance(gear_level, int) or not (58 <= gear_level <= 100):
+        raise ValueError("Gear level must be an int between 58 and 100")
+        
+    return gear_level

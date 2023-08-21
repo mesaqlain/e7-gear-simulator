@@ -43,8 +43,8 @@ cdmg_vals = [11, 13, 14]  # Mainstat values for CDMG
 spd_vals = [8, 8, 9]
 
 # VARIABLE NAMING EXAMPLES:
-# flat_atk_r5 - first part is stat name, the 'r' stands for 'Rare', 5 stands for tier, rt stands for rate
-# flat_atk_h6_rt - first part is stat name, the 'h' stands for 'Heroic', 6
+# flat_atk_r5 - first part is stat name, the 'r' stands for 'rare', 5 stands for tier, rt stands for rate
+# flat_atk_h6_rt - first part is stat name, the 'h' stands for 'heroic', 6
 # stands for tier, rt stands for rate
 
 # ATK%, HP%, DEF%, EFF%, ER% for Tier 5
@@ -462,20 +462,20 @@ STATS = {
         'reforge': {'mainstat': [525], 'substat': rf_flat_atk},
         'vars': {
                 'mainstat': {'key': '<A>', 'type': 'fixed', 'values': {
-                    'Rare': flat_atk_vals,
-                    'Heroic': flat_atk_vals,
-                    'Epic': flat_atk_vals
+                    'rare': flat_atk_vals,
+                    'heroic': flat_atk_vals,
+                    'epic': flat_atk_vals
                 },
                 },
             'substat': {'key': '<A>', 'type': 'rand', 'values': {
-                'Rare': [flat_atk_r5, flat_atk_r6, flat_atk_r7],
-                'Heroic': [flat_atk_h5, flat_atk_h6, flat_atk_h7],
-                'Epic': [flat_atk_e5, flat_atk_e6, flat_atk_e7]
+                'rare': [flat_atk_r5, flat_atk_r6, flat_atk_r7],
+                'heroic': [flat_atk_h5, flat_atk_h6, flat_atk_h7],
+                'epic': [flat_atk_e5, flat_atk_e6, flat_atk_e7]
             },
                     'rates': {
-                    'Rare': [flat_atk_r5_rt, flat_atk_r6_rt, flat_atk_r7_rt],
-                    'Heroic': [flat_atk_h5_rt, flat_atk_h6_rt, flat_atk_h7_rt],
-                    'Epic': [flat_atk_e5_rt, flat_atk_e6_rt, flat_atk_e7_rt]
+                    'rare': [flat_atk_r5_rt, flat_atk_r6_rt, flat_atk_r7_rt],
+                    'heroic': [flat_atk_h5_rt, flat_atk_h6_rt, flat_atk_h7_rt],
+                    'epic': [flat_atk_e5_rt, flat_atk_e6_rt, flat_atk_e7_rt]
             }
                     },
         },
@@ -490,20 +490,20 @@ STATS = {
         'reforge': {'mainstat': [65], 'substat': rf_pct},
         'vars': {
                 'mainstat': {'key': '<A>', 'type': 'fixed', 'values': {
-                    'Rare': mainstat_vals,
-                    'Heroic': mainstat_vals,
-                    'Epic': mainstat_vals
+                    'rare': mainstat_vals,
+                    'heroic': mainstat_vals,
+                    'epic': mainstat_vals
                 },
                 },
             'substat': {'key': '<A>', 'type': 'rand', 'values': {
-                'Rare': [percent_stat_r5, percent_stat_r6, percent_stat_r7],
-                'Heroic': [percent_stat_h5, percent_stat_h6, percent_stat_h7],
-                'Epic': [percent_stat_e5, percent_stat_e6, percent_stat_e7]
+                'rare': [percent_stat_r5, percent_stat_r6, percent_stat_r7],
+                'heroic': [percent_stat_h5, percent_stat_h6, percent_stat_h7],
+                'epic': [percent_stat_e5, percent_stat_e6, percent_stat_e7]
             },
                     'rates': {
-                    'Rare': [percent_stat_r5_rt, percent_stat_r6_rt, percent_stat_r7_rt],
-                    'Heroic': [percent_stat_h5_rt, percent_stat_h6_rt, percent_stat_h7_rt],
-                    'Epic': [percent_stat_e5_rt, percent_stat_e6_rt, percent_stat_e7_rt]
+                    'rare': [percent_stat_r5_rt, percent_stat_r6_rt, percent_stat_r7_rt],
+                    'heroic': [percent_stat_h5_rt, percent_stat_h6_rt, percent_stat_h7_rt],
+                    'epic': [percent_stat_e5_rt, percent_stat_e6_rt, percent_stat_e7_rt]
             }
                     },
         },
@@ -518,20 +518,20 @@ STATS = {
         'reforge': {'mainstat': [2835], 'substat': rf_flat_hp},
         'vars': {
                 'mainstat': {'key': '<A>', 'type': 'fixed', 'values': {
-                    'Rare': flat_hp_vals,
-                    'Heroic': flat_hp_vals,
-                    'Epic': flat_hp_vals
+                    'rare': flat_hp_vals,
+                    'heroic': flat_hp_vals,
+                    'epic': flat_hp_vals
                 },
                 },
             'substat': {'key': '<A>', 'type': 'rand', 'values': {
-                'Rare': [flat_hp_r5, flat_hp_r6, flat_hp_r7],
-                'Heroic': [flat_hp_h5, flat_hp_h6, flat_hp_h7],
-                'Epic': [flat_hp_e5, flat_hp_e6, flat_hp_e7]
+                'rare': [flat_hp_r5, flat_hp_r6, flat_hp_r7],
+                'heroic': [flat_hp_h5, flat_hp_h6, flat_hp_h7],
+                'epic': [flat_hp_e5, flat_hp_e6, flat_hp_e7]
             },
                     'rates': {
-                    'Rare': [flat_hp_r5_rt, flat_hp_r6_rt, flat_hp_r7_rt],
-                    'Heroic': [flat_hp_h5_rt, flat_hp_h6_rt, flat_hp_h7_rt],
-                    'Epic': [flat_hp_e5_rt, flat_hp_e6_rt, flat_hp_e7_rt]
+                    'rare': [flat_hp_r5_rt, flat_hp_r6_rt, flat_hp_r7_rt],
+                    'heroic': [flat_hp_h5_rt, flat_hp_h6_rt, flat_hp_h7_rt],
+                    'epic': [flat_hp_e5_rt, flat_hp_e6_rt, flat_hp_e7_rt]
             }
                     },
         },
@@ -546,20 +546,20 @@ STATS = {
         'reforge': {'mainstat': [65], 'substat': rf_pct},
         'vars': {
                 'mainstat': {'key': '<A>', 'type': 'fixed', 'values': {
-                    'Rare': mainstat_vals,
-                    'Heroic': mainstat_vals,
-                    'Epic': mainstat_vals
+                    'rare': mainstat_vals,
+                    'heroic': mainstat_vals,
+                    'epic': mainstat_vals
                 },
                 },
             'substat': {'key': '<A>', 'type': 'rand', 'values': {
-                'Rare': [percent_stat_r5, percent_stat_r6, percent_stat_r7],
-                'Heroic': [percent_stat_h5, percent_stat_h6, percent_stat_h7],
-                'Epic': [percent_stat_e5, percent_stat_e6, percent_stat_e7]
+                'rare': [percent_stat_r5, percent_stat_r6, percent_stat_r7],
+                'heroic': [percent_stat_h5, percent_stat_h6, percent_stat_h7],
+                'epic': [percent_stat_e5, percent_stat_e6, percent_stat_e7]
             },
                     'rates': {
-                    'Rare': [percent_stat_r5_rt, percent_stat_r6_rt, percent_stat_r7_rt],
-                    'Heroic': [percent_stat_h5_rt, percent_stat_h6_rt, percent_stat_h7_rt],
-                    'Epic': [percent_stat_e5_rt, percent_stat_e6_rt, percent_stat_e7_rt]
+                    'rare': [percent_stat_r5_rt, percent_stat_r6_rt, percent_stat_r7_rt],
+                    'heroic': [percent_stat_h5_rt, percent_stat_h6_rt, percent_stat_h7_rt],
+                    'epic': [percent_stat_e5_rt, percent_stat_e6_rt, percent_stat_e7_rt]
             }
                     },
         },
@@ -574,20 +574,20 @@ STATS = {
         'reforge': {'mainstat': [310], 'substat': rf_flat_def},
         'vars': {
                 'mainstat': {'key': '<A>', 'type': 'fixed', 'values': {
-                    'Rare': flat_def_vals,
-                    'Heroic': flat_def_vals,
-                    'Epic': flat_def_vals
+                    'rare': flat_def_vals,
+                    'heroic': flat_def_vals,
+                    'epic': flat_def_vals
                 },
                 },
             'substat': {'key': '<A>', 'type': 'rand', 'values': {
-                'Rare': [flat_def_r5, flat_def_r6, flat_def_r7],
-                'Heroic': [flat_def_h5, flat_def_h6, flat_def_h7],
-                'Epic': [flat_def_e5, flat_def_e6, flat_def_e7]
+                'rare': [flat_def_r5, flat_def_r6, flat_def_r7],
+                'heroic': [flat_def_h5, flat_def_h6, flat_def_h7],
+                'epic': [flat_def_e5, flat_def_e6, flat_def_e7]
             },
                     'rates': {
-                    'Rare': [flat_def_r5_rt, flat_def_r6_rt, flat_def_r7_rt],
-                    'Heroic': [flat_def_h5_rt, flat_def_h6_rt, flat_def_h7_rt],
-                    'Epic': [flat_def_e5_rt, flat_def_e6_rt, flat_def_e7_rt]
+                    'rare': [flat_def_r5_rt, flat_def_r6_rt, flat_def_r7_rt],
+                    'heroic': [flat_def_h5_rt, flat_def_h6_rt, flat_def_h7_rt],
+                    'epic': [flat_def_e5_rt, flat_def_e6_rt, flat_def_e7_rt]
             }
                     },
         },
@@ -602,20 +602,20 @@ STATS = {
         'reforge': {'mainstat': [65], 'substat': rf_pct},
         'vars': {
                 'mainstat': {'key': '<A>', 'type': 'fixed', 'values': {
-                    'Rare': mainstat_vals,
-                    'Heroic': mainstat_vals,
-                    'Epic': mainstat_vals
+                    'rare': mainstat_vals,
+                    'heroic': mainstat_vals,
+                    'epic': mainstat_vals
                 },
                 },
             'substat': {'key': '<A>', 'type': 'rand', 'values': {
-                'Rare': [percent_stat_r5, percent_stat_r6, percent_stat_r7],
-                'Heroic': [percent_stat_h5, percent_stat_h6, percent_stat_h7],
-                'Epic': [percent_stat_e5, percent_stat_e6, percent_stat_e7]
+                'rare': [percent_stat_r5, percent_stat_r6, percent_stat_r7],
+                'heroic': [percent_stat_h5, percent_stat_h6, percent_stat_h7],
+                'epic': [percent_stat_e5, percent_stat_e6, percent_stat_e7]
             },
                     'rates': {
-                    'Rare': [percent_stat_r5_rt, percent_stat_r6_rt, percent_stat_r7_rt],
-                    'Heroic': [percent_stat_h5_rt, percent_stat_h6_rt, percent_stat_h7_rt],
-                    'Epic': [percent_stat_e5_rt, percent_stat_e6_rt, percent_stat_e7_rt]
+                    'rare': [percent_stat_r5_rt, percent_stat_r6_rt, percent_stat_r7_rt],
+                    'heroic': [percent_stat_h5_rt, percent_stat_h6_rt, percent_stat_h7_rt],
+                    'epic': [percent_stat_e5_rt, percent_stat_e6_rt, percent_stat_e7_rt]
             }
                     },
         },
@@ -630,20 +630,20 @@ STATS = {
         'reforge': {'mainstat': [60], 'substat': rf_crit},
         'vars': {
                 'mainstat': {'key': '<A>', 'type': 'fixed', 'values': {
-                    'Rare': crit_vals,
-                    'Heroic': crit_vals,
-                    'Epic': crit_vals
+                    'rare': crit_vals,
+                    'heroic': crit_vals,
+                    'epic': crit_vals
                 },
                 },
             'substat': {'key': '<A>', 'type': 'rand', 'values': {
-                'Rare': [crit_r5, crit_r6, crit_r7],
-                'Heroic': [crit_h5, crit_h6, crit_h7],
-                'Epic': [crit_e5, crit_e6, crit_e7]
+                'rare': [crit_r5, crit_r6, crit_r7],
+                'heroic': [crit_h5, crit_h6, crit_h7],
+                'epic': [crit_e5, crit_e6, crit_e7]
             },
                     'rates': {
-                    'Rare': [crit_r5_rt, crit_r6_rt, crit_r7_rt],
-                    'Heroic': [crit_h5_rt, crit_h6_rt, crit_h7_rt],
-                    'Epic': [crit_e5_rt, crit_e6_rt, crit_e7_rt]
+                    'rare': [crit_r5_rt, crit_r6_rt, crit_r7_rt],
+                    'heroic': [crit_h5_rt, crit_h6_rt, crit_h7_rt],
+                    'epic': [crit_e5_rt, crit_e6_rt, crit_e7_rt]
             }
                     },
         },
@@ -658,20 +658,20 @@ STATS = {
         'reforge': {'mainstat': [70], 'substat': rf_cdmg},
         'vars': {
                 'mainstat': {'key': '<A>', 'type': 'fixed', 'values': {
-                    'Rare': cdmg_vals,
-                    'Heroic': cdmg_vals,
-                    'Epic': cdmg_vals
+                    'rare': cdmg_vals,
+                    'heroic': cdmg_vals,
+                    'epic': cdmg_vals
                 },
                 },
             'substat': {'key': '<A>', 'type': 'rand', 'values': {
-                'Rare': [cdmg_r5, cdmg_r6, cdmg_r7],
-                'Heroic': [cdmg_h5, cdmg_h6, cdmg_h7],
-                'Epic': [cdmg_e5, cdmg_e6, cdmg_e7]
+                'rare': [cdmg_r5, cdmg_r6, cdmg_r7],
+                'heroic': [cdmg_h5, cdmg_h6, cdmg_h7],
+                'epic': [cdmg_e5, cdmg_e6, cdmg_e7]
             },
                     'rates': {
-                    'Rare': [cdmg_r5_rt, cdmg_r6_rt, cdmg_r7_rt],
-                    'Heroic': [cdmg_h5_rt, cdmg_h6_rt, cdmg_h7_rt],
-                    'Epic': [cdmg_e5_rt, cdmg_e6_rt, cdmg_e7_rt]
+                    'rare': [cdmg_r5_rt, cdmg_r6_rt, cdmg_r7_rt],
+                    'heroic': [cdmg_h5_rt, cdmg_h6_rt, cdmg_h7_rt],
+                    'epic': [cdmg_e5_rt, cdmg_e6_rt, cdmg_e7_rt]
             }
                     },
         },
@@ -686,20 +686,20 @@ STATS = {
         'reforge': {'mainstat': [65], 'substat': rf_pct},
         'vars': {
                 'mainstat': {'key': '<A>', 'type': 'fixed', 'values': {
-                    'Rare': mainstat_vals,
-                    'Heroic': mainstat_vals,
-                    'Epic': mainstat_vals
+                    'rare': mainstat_vals,
+                    'heroic': mainstat_vals,
+                    'epic': mainstat_vals
                 },
                 },
             'substat': {'key': '<A>', 'type': 'rand', 'values': {
-                'Rare': [percent_stat_r5, percent_stat_r6, percent_stat_r7],
-                'Heroic': [percent_stat_h5, percent_stat_h6, percent_stat_h7],
-                'Epic': [percent_stat_e5, percent_stat_e6, percent_stat_e7]
+                'rare': [percent_stat_r5, percent_stat_r6, percent_stat_r7],
+                'heroic': [percent_stat_h5, percent_stat_h6, percent_stat_h7],
+                'epic': [percent_stat_e5, percent_stat_e6, percent_stat_e7]
             },
                     'rates': {
-                    'Rare': [percent_stat_r5_rt, percent_stat_r6_rt, percent_stat_r7_rt],
-                    'Heroic': [percent_stat_h5_rt, percent_stat_h6_rt, percent_stat_h7_rt],
-                    'Epic': [percent_stat_e5_rt, percent_stat_e6_rt, percent_stat_e7_rt]
+                    'rare': [percent_stat_r5_rt, percent_stat_r6_rt, percent_stat_r7_rt],
+                    'heroic': [percent_stat_h5_rt, percent_stat_h6_rt, percent_stat_h7_rt],
+                    'epic': [percent_stat_e5_rt, percent_stat_e6_rt, percent_stat_e7_rt]
             }
                     },
         },
@@ -714,20 +714,20 @@ STATS = {
         'reforge': {'mainstat': [65], 'substat': rf_pct},
         'vars': {
                 'mainstat': {'key': '<A>', 'type': 'fixed', 'values': {
-                    'Rare': mainstat_vals,
-                    'Heroic': mainstat_vals,
-                    'Epic': mainstat_vals
+                    'rare': mainstat_vals,
+                    'heroic': mainstat_vals,
+                    'epic': mainstat_vals
                 },
                 },
             'substat': {'key': '<A>', 'type': 'rand', 'values': {
-                'Rare': [percent_stat_r5, percent_stat_r6, percent_stat_r7],
-                'Heroic': [percent_stat_h5, percent_stat_h6, percent_stat_h7],
-                'Epic': [percent_stat_e5, percent_stat_e6, percent_stat_e7]
+                'rare': [percent_stat_r5, percent_stat_r6, percent_stat_r7],
+                'heroic': [percent_stat_h5, percent_stat_h6, percent_stat_h7],
+                'epic': [percent_stat_e5, percent_stat_e6, percent_stat_e7]
             },
                     'rates': {
-                    'Rare': [percent_stat_r5_rt, percent_stat_r6_rt, percent_stat_r7_rt],
-                    'Heroic': [percent_stat_h5_rt, percent_stat_h6_rt, percent_stat_h7_rt],
-                    'Epic': [percent_stat_e5_rt, percent_stat_e6_rt, percent_stat_e7_rt]
+                    'rare': [percent_stat_r5_rt, percent_stat_r6_rt, percent_stat_r7_rt],
+                    'heroic': [percent_stat_h5_rt, percent_stat_h6_rt, percent_stat_h7_rt],
+                    'epic': [percent_stat_e5_rt, percent_stat_e6_rt, percent_stat_e7_rt]
             }
                     },
         },
@@ -742,20 +742,20 @@ STATS = {
         'reforge': {'mainstat': [45], 'substat': rf_spd},
         'vars': {
                 'mainstat': {'key': '<A>', 'type': 'fixed', 'values': {
-                    'Rare': spd_vals,
-                    'Heroic': spd_vals,
-                    'Epic': spd_vals
+                    'rare': spd_vals,
+                    'heroic': spd_vals,
+                    'epic': spd_vals
                 },
                 },
             'substat': {'key': '<A>', 'type': 'rand', 'values': {
-                'Rare': [spd_r5, spd_r6, spd_r7],
-                'Heroic': [spd_h5, spd_h6, spd_h7],
-                'Epic': [spd_e5, spd_e6, spd_e7]
+                'rare': [spd_r5, spd_r6, spd_r7],
+                'heroic': [spd_h5, spd_h6, spd_h7],
+                'epic': [spd_e5, spd_e6, spd_e7]
             },
                     'rates': {
-                    'Rare': [spd_r5_rt, spd_r6_rt, spd_r7_rt],
-                    'Heroic': [spd_h5_rt, spd_h6_rt, spd_h7_rt],
-                    'Epic': [spd_e5_rt, spd_e6_rt, spd_e7_rt]
+                    'rare': [spd_r5_rt, spd_r6_rt, spd_r7_rt],
+                    'heroic': [spd_h5_rt, spd_h6_rt, spd_h7_rt],
+                    'epic': [spd_e5_rt, spd_e6_rt, spd_e7_rt]
             }
                     },
         },

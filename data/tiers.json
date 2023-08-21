@@ -1,6 +1,6 @@
 {
     "tier 5": {
-        "item_tier": 5,
+        "gear_tier": 5,
         "level_range": [
             58,
             59,
@@ -19,7 +19,7 @@
         ]
     },
     "tier 6": {
-        "item_tier": 6,
+        "gear_tier": 6,
         "level_range": [
             72,
             73,
@@ -38,7 +38,7 @@
         ]
     },
     "tier 7": {
-        "item_tier": 7,
+        "gear_tier": 7,
         "level_range": [
             86,
             87,

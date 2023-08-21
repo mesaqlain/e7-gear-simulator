@@ -420,7 +420,9 @@ class TestStat(unittest.TestCase):
         for _ in range(1000):
             stat = self.stat.get_random_stat(stat_type='mainstat',gear_type='ring')
             expected_id = str(stat['id'])
+            expected_key = str(stat['key_stat'])
             self.assertEqual(self.stat.stat_id, expected_id, f"Valid int stat ID should return selected_stat_id {expected_id}")
+            self.assertEqual(self.stat.stat_key, expected_key, f"Valid int stat ID should return stat_key {expected_key}")
             self.assertEqual(self.stat.stat_type, 'mainstat', f"Valid int stat ID should return stat type 'mainstat'")
             self.assertEqual(self.stat.gear_type, 'ring', f"Valid int stat ID should return gear type 'ring'")
 
@@ -432,7 +434,9 @@ class TestStat(unittest.TestCase):
         for _ in range(1000):
             stat = self.stat.get_random_stat(stat_type='substat',gear_type='helm')
             expected_id = str(stat['id'])
+            expected_key = str(stat['key_stat'])
             self.assertEqual(self.stat.stat_id, expected_id, f"Valid int stat ID should return selected_stat_id of {expected_id}")
+            self.assertEqual(self.stat.stat_key, expected_key, f"Valid int stat ID should return stat_key {expected_key}")
             self.assertEqual(self.stat.stat_type, 'substat', f"Valid int stat ID should return stat type 'substat'")
             self.assertEqual(self.stat.gear_type, 'helm', f"Valid int stat ID should return gear type 'helm'")
 
