@@ -41,6 +41,41 @@ class TestValidateGearType(unittest.TestCase):
 
     def test_none_gear_type(self):
         self.assertIsNone(validate_gear_type(None))
+        
+        
+    def test_valid_gear_type_stat_id(self):
+        """Test valid gear types when stat_id is provided"""
+        valid_gear_types = ['WeapoN', 'HELM', 'aRmOr', 'NECKlace', 'riNG', 'bOOtS']
+        for gear_type in valid_gear_types:
+            self.assertEqual(validate_gear_type(gear_type, stat_id=1), gear_type.lower())
+            
+    def test_valid_gear_type_stat_id_2(self):
+        """Test valid gear types when stat_type is mainstat"""
+        valid_gear_types = ['WeapoN', 'HELM', 'aRmOr', 'NECKlace', 'riNG', 'bOOtS']
+        for gear_type in valid_gear_types:
+            self.assertEqual(validate_gear_type(gear_type, stat_type='mainstat'), gear_type.lower())
 
+    def test_valid_gear_type_stat_id_3(self):
+        """Test valid gear types when stat_type is substat"""
+        valid_gear_types = ['WeapoN', 'HELM', 'aRmOr', 'NECKlace', 'riNG', 'bOOtS']
+        for gear_type in valid_gear_types:
+            self.assertEqual(validate_gear_type(gear_type, stat_type='substat'), gear_type.lower())
+            
+            
+    def test_invalid_gear_type_stat_id(self):
+        """Check if there is an error when the stat_id is not in the pool of allowed ids"""
+        valid_gear_types = ['weapon', 'armor', 'helm', 'necklace', 'ring', 'boots']
+        stat_types = ['mainstat', 'substat', 'substat', 'mainstat', 'mainstat', 'mainstat']
+        stat_ids = [3, 0, 2, 8, 10, 6]
+        for i in range(len(valid_gear_types)):
+            
+            gear_type = valid_gear_types[i]
+            stat_id = stat_ids[i]
+            stat_type = stat_types[i]
+            
+            with self.assertRaises(ValueError, msg=f"The stat {stat_id} cannot be added to gear type {gear_type} as {stat_type}."):
+                validate_gear_type(gear_type, stat_id, stat_type)
+            
+            
 if __name__ == '__main__':
     unittest.main()

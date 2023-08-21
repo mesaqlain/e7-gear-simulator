@@ -26,7 +26,7 @@ def validate_stat_id(stat_id):
     return str(stat_id)
 
 
-def validate_gear_type(gear_type):
+def validate_gear_type(gear_type, stat_id=None, stat_type=None):
     """
     Validate and return gear_type parameter in lower case.
     Raise ValueError if input for gear_type is not a string or invalid.
@@ -45,6 +45,15 @@ def validate_gear_type(gear_type):
     
     if gear_type not in [key.lower() for key in TYPES.keys()]:
         raise ValueError(f"Invalid gear type '{gear_type}'. Valid gear types are: {', '.join(TYPES.keys())}")
+        
+    if stat_id is not None and stat_type is not None:
+        # Validate inputs
+        stat_id = validate_stat_id(stat_id)
+        stat_type = validate_stat_type(stat_type)
+        # Check the pool of stats for given stat_id and stat_type
+        pool = list(TYPES[gear_type][stat_type])
+        if int(stat_id) not in pool:
+            raise ValueError(f"The gear type {gear_type} cannot have {stat_id} stat as {stat_type}.")
 
     return gear_type
 
@@ -145,7 +154,7 @@ def validate_rolled(rolled, stat_type='substat'):
     return rolled
 
 
-def validate_mod(mod):
+def validate_mod(mod, stat_type=None):
     """
     Validates the mod parameter.
     
@@ -156,10 +165,14 @@ def validate_mod(mod):
         bool: The validated mod parameter value.
         
     Raises:
-        ValueError: If mod is not a boolean value.
+        ValueError: If mod is not a boolean value or if stat_type = 'mainstat'
     """
     if mod is None or not isinstance(mod, bool):
         raise ValueError("Mod parameter must be a boolean value (True or False).")
+        
+    if mod and stat_type is not None and stat_type == 'mainstat':
+        raise ValueError("Mainstats cannot be modified.")
+    
     return mod
 
 

@@ -39,10 +39,26 @@ class Stat:
         self.value = None
         self.value_key = None
         self.modded = False
+        self.text_formatted = None
         
     def __str__(self):
         """Str representation of class"""
-        return f"ID: {self.stat_id}\nStat: {self.stat_key}\nType: {self.stat_type}\nGear: {self.gear_type}\nRolled Count: {self.rolled}\nReforge Value: {self.reforge_increase}"
+        return (
+            f"ID: {self.stat_id}\n"
+            f"Stat: {self.stat_key}\n"
+            f"Stat Type: {self.stat_type}\n"
+            f"Gear Type: {self.gear_type}\n"
+            f"Grade: {self.gear_grade}\n"
+            f"Level: {self.gear_level}\n"
+            f"Tier: {self.gear_tier}\n"
+            f"Rolled Count: {self.rolled}\n"
+            f"Reforge Value: {self.reforge_increase}\n"
+            f"Text: {self.text}\n"
+            f"Value: {self.value}\n"
+            f"Value Key: {self.value_key}\n"
+            f"Modded: {self.modded}\n"
+            f"Formatted Text: {self.text_formatted}"
+        )
         
 
     def get_stat_by_id(self, stat_id, stat_type=None, gear_type=None):
@@ -69,7 +85,7 @@ class Stat:
                 if stat_type is not None:
                     self.stat_type = validate_stat_type(stat_type)
                 if gear_type is not None:
-                    self.gear_type = validate_gear_type(gear_type)
+                    self.gear_type = validate_gear_type(gear_type, stat_id=self.stat_id, stat_type=self.stat_type)
 
                 # Return the stat dictionary associated with the ID
                 return stat_data
@@ -223,7 +239,7 @@ class Stat:
         self.gear_level = validate_gear_level(gear_level)
         self.gear_tier = get_gear_tier(gear_level)
         self.rolled = validate_rolled(rolled, self.stat_type)
-        mod = validate_mod(mod)
+        mod = validate_mod(mod, self.stat_type)
         mod_type = validate_mod_type(mod_type)
         
 
@@ -253,3 +269,44 @@ class Stat:
             self.stat_id, self.stat_type, self.rolled)
 
         return self
+    
+
+    def format_stat(self, show_reforged=False):
+        """
+        Returns a concise representation of the stat value.
+        
+        Args:
+            show_reforged (bool): Whether to show the reforged value or not
+        """
+
+        # Get the original 'text' description from the parsed stat
+        text = self.text
+
+        if self.stat_type == 'mainstat':
+            reforged_value = self.reforge_increase
+        else:
+            reforged_value = self.value + self.reforge_increase
+
+        # Replace 'key' with 'value' in the text
+        text = text.replace(self.value_key, str(self.value))
+
+        # If we want to show reforged value in parenthesis next to current stat
+        if show_reforged:
+            if self.stat_id in ['1', '3', '5', '6', '7', '8', '9']:
+                # Make sure there is a % for the percent stats
+                text = text.replace('<B>', '(' + str(reforged_value) + '%) ')
+            else:
+                # If it's a flat stat, empty string for <B> key
+                text = text.replace('<B>', '(' + str(reforged_value) + ') ')
+        else:
+            # If we don't want to show reforged value
+            text = text.replace('<B>', '')
+
+        if self.modded:
+            text = text + ' (modded)'
+        
+        # Assign attribute
+        self.text_formatted = text
+
+        # Return the formatted text representation of the parsed stat
+        return text

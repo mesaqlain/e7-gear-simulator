@@ -456,7 +456,7 @@ spd_lesser_90 = [
 STATS = {
     '0': {
         'id': 0,
-        'text': '<A> <B>Atack',
+        'text': '<A> <B>Attack',
         'key_stat': 'attack_flat',
         'gscore': (3.46 / 39),
         'reforge': {'mainstat': [525], 'substat': rf_flat_atk},
@@ -484,7 +484,7 @@ STATS = {
     },
     '1': {
         'id': 1,
-        'text': '<A>% <B>Atack',
+        'text': '<A>% <B>Attack',
         'key_stat': 'attack_percent',
         'gscore': 1,
         'reforge': {'mainstat': [65], 'substat': rf_pct},

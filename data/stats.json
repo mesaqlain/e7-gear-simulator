@@ -1,7 +1,7 @@
 {
     "0": {
         "id": 0,
-        "text": "<A> <B>Atack",
+        "text": "<A> <B>Attack",
         "key_stat": "attack_flat",
         "gscore": 0.08871794871794872,
         "reforge": {
@@ -1045,7 +1045,7 @@
     },
     "1": {
         "id": 1,
-        "text": "<A>% <B>Atack",
+        "text": "<A>% <B>Attack",
         "key_stat": "attack_percent",
         "gscore": 1,
         "reforge": {

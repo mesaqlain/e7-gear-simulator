@@ -74,17 +74,64 @@ class TestStat(unittest.TestCase):
         stat = self.stat.get_stat_by_id(0)
         expected_id = '0'
         expected_key = 'attack_flat'
+        expected_stat_type = 'mainstat'
+        expected_gear_type = None
         self.assertEqual(self.stat.stat_id, expected_id, "Valid int stat ID should return expected_id of '0'")
         self.assertEqual(self.stat.stat_key, expected_key, "Valid int stat ID should return expected_key of 'attack_flat'")
-
+        self.assertEqual(self.stat.stat_type, expected_stat_type, "If no stat_type provided, it should be 'mainstat'")
+        self.assertIsNone(self.stat.gear_type, "If no gear_type provided, it should be None")
+        
+        
     def test_valid_str_stat_id_stored_val(self):
         """Test whether the Stat object holds the correct selected_stat_id with a valid str input"""
         stat = self.stat.get_stat_by_id('7')
         expected_id = '7'
         expected_key = 'crit_damage'
+        expected_stat_type = 'mainstat'
+        expected_gear_type = None
         self.assertEqual(self.stat.stat_id, expected_id, "Valid int stat ID should return selected_stat_id of '0'")
         self.assertEqual(self.stat.stat_key, expected_key, "Valid int stat ID should return expected_key of 'crit_damage'")
+        self.assertEqual(self.stat.stat_type, expected_stat_type, "If no stat_type provided, it should be 'mainstat'")
+        self.assertIsNone(self.stat.gear_type, "If no gear_type provided, it should be None")
 
+        
+    def test_valid_str_stat_id_stored_val_extra_attribtues(self):
+        """Test whether the Stat object holds the correct class attributes with a valid str input"""
+        stat = self.stat.get_stat_by_id(10, stat_type='substat', gear_type='boots')
+        expected_id = '10'
+        expected_key = 'speed_flat'
+        expected_stat_type = 'substat'
+        expected_gear_type = 'boots'
+        self.assertEqual(self.stat.stat_id, expected_id, "Valid int stat ID should return selected_stat_id of '0'")
+        self.assertEqual(self.stat.stat_key, expected_key, "Valid int stat ID should return expected_key of 'crit_damage'")
+        self.assertEqual(self.stat.stat_type, expected_stat_type, "If no stat_type provided, it should be 'mainstat'")
+        self.assertEqual(self.stat.gear_type, expected_gear_type, "If no gear_type provided, it should be None")
+        
+        
+    def test_valid_str_stat_id_stored_val_extra_attribtues_2(self):
+        """Test whether the Stat object holds the correct class attributes with a valid str input"""
+        stat = self.stat.get_stat_by_id(9, stat_type='mainstat', gear_type='ring')
+        expected_id = '9'
+        expected_key = 'eff_res'
+        expected_stat_type = 'mainstat'
+        expected_gear_type = 'ring'
+        self.assertEqual(self.stat.stat_id, expected_id, "Valid int stat ID should return selected_stat_id of '0'")
+        self.assertEqual(self.stat.stat_key, expected_key, "Valid int stat ID should return expected_key of 'crit_damage'")
+        self.assertEqual(self.stat.stat_type, expected_stat_type, "If no stat_type provided, it should be 'mainstat'")
+        self.assertEqual(self.stat.gear_type, expected_gear_type, "If no gear_type provided, it should be None")
+        
+        
+    def test_invalid_str_stat_id_stored_val_extra_attribtues_3(self):
+        """Test whether we get an error when we try to get incorrect combination of stats with gear_type"""
+        gear_types = ['weapon', 'armor', 'helm', 'necklace', 'ring', 'boots']
+        stat_types = ['mainstat', 'substat', 'substat', 'mainstat', 'mainstat', 'mainstat']
+        stat_ids = [3, 0, 2, 8, 10, 6]
+        for i in range(len(gear_types)):
+            gear_type = gear_types[i]
+            stat_type = stat_types[i]
+            stat_id = stat_ids[i]
+            with self.assertRaises(ValueError, msg=f"Gear type {gear_type} cannot have stat {stat_id} as {stat_type}."):
+                self.stat.get_stat_by_id(stat_id, stat_type, gear_type)
         
 if __name__ == '__main__':
     unittest.main()
