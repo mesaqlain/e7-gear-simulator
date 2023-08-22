@@ -264,26 +264,6 @@ def validate_gear_set(gear_set):
     return gear_set.lower()
 
 
-def validate_gear_set(gear_set):
-    """
-    Validates gear_set by checking if the input is a str and if it is one of the
-    sets from the sets.json file
-    
-    Args:
-        gear_set (str): Set name
-        
-    Returns:
-        gear_set (str)
-    """
-    if gear_set is None:
-        gear_set = get_random_set()
-    
-    if not isinstance(gear_set, str) or gear_set.lower() not in list(SETS.keys()):
-        raise ValueError("Gear set must be a str and one of the values from sets.json")
-        
-    return gear_set.lower()
-
-
 def validate_substat_ids(substat_ids, mainstat_id=None):
     """
     Validates the given substat ids. Converts integers to strings. 
@@ -300,17 +280,17 @@ def validate_substat_ids(substat_ids, mainstat_id=None):
     if substat_ids is None:
         return []
     
-    substat_ids = convert_int_to_str(substat_ids)
+    substat_ids_str = convert_int_to_str(substat_ids)
 
     # Get length of substats list (how many subs provided)
-    len_ = len(substat_ids)
+    len_ = len(substat_ids_str)
 
     # Check if more than 4 subs are provided:
     if len_ > 4:
         raise ValueError("Please provide up to 4 sub stats only.")
         
     # Check if valid substat id's are provided
-    valid_substat_ids = [validate_stat_id(s) for s in substat_ids]
+    valid_substat_ids = [validate_stat_id(s) for s in substat_ids_str]
     
     # Check if duplicate substat id's are provided
     if mainstat_id is not None:

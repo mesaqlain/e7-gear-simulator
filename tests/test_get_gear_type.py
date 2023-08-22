@@ -34,7 +34,7 @@ class TestGetGearType(unittest.TestCase):
         
     def test_get_gear_type_input_mainstat(self):
         """
-        Test whether we get an appropriate random gear if no args are provided.
+        Test whether we get an appropriate random gear if mainstats are provided.
         """
         mainstat_id_list = [0, 2, 4, 10, 6, 7, 8, 9, 1, 3, 5]
         expect_gear_types = [
@@ -68,6 +68,84 @@ class TestGetGearType(unittest.TestCase):
                 self.assertFalse(missing, f"The following values were not selected: {missing}")
                 self.assertFalse(extra, f"The following extra values were selected: {extra}")
         
+        
+    def test_get_gear_type_input_substats_only_1(self):
+        """
+        Test whether we get an appropriate random gear if only a single substat is provided.
+        """
+        substat_id_list = list(range(11))
+        expected_gear_types_list = [
+            ['helm', 'necklace', 'ring', 'boots'],
+            ['weapon', 'helm', 'necklace', 'ring', 'boots'],
+            ['weapon', 'armor', 'necklace', 'ring', 'boots'],
+            ['weapon', 'helm', 'armor', 'necklace', 'ring', 'boots'],
+            ['helm', 'necklace', 'ring', 'boots'],
+            ['helm', 'armor', 'necklace', 'ring', 'boots'],
+            ['weapon', 'helm', 'armor', 'necklace', 'ring', 'boots'],
+            ['weapon', 'helm', 'armor', 'necklace', 'ring', 'boots'],
+            ['weapon', 'helm', 'armor', 'necklace', 'ring', 'boots'],
+            ['weapon', 'helm', 'armor', 'necklace', 'ring', 'boots'],
+            ['weapon', 'helm', 'armor', 'necklace', 'ring', 'boots']
+        ]
+           
+        for i, val in enumerate(substat_id_list):
+            with self.subTest(substat_id_list=val, gear_type=expected_gear_types_list[i]):
+                picked_gear_types = set()
+                expected_gear_types = set(expected_gear_types_list[i])
+
+                for j in range(10000):
+                    input_substat_id = val
+                    gear_type = test_get_gear_type(substat_ids=input_substat_id)
+                    expected_gear_type = list(expected_gear_types)
+                    picked_gear_types.add(gear_type)
+                    self.assertIn(gear_type, expected_gear_type, f"{gear_type} is not in {expected_gear_type}")
+
+                missing = expected_gear_types - picked_gear_types 
+                extra = picked_gear_types - expected_gear_types
+
+                self.assertFalse(missing, f"The following values were not selected: {missing}")
+                self.assertFalse(extra, f"The following extra values were selected: {extra}")
+        
+        
+    def test_get_gear_type_input_substats_only_2(self):
+        """
+        Test whether we get an appropriate random gear if multiple substats are provided.
+        """
+        substat_id_list = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [0, 2, 10, 5],
+            [1, 3, 5, 7],
+            [2, 6],
+            [3, 4, 5, 6]
+        ]
+        
+        expected_gear_types_list = [
+            ['necklace', 'ring', 'boots'],
+            ['helm', 'necklace', 'ring', 'boots'],
+            ['necklace', 'ring', 'boots'],
+            ['helm', 'necklace', 'ring', 'boots'],
+            ['weapon', 'armor', 'necklace', 'ring', 'boots'],
+            ['helm', 'necklace', 'ring', 'boots']
+        ]
+           
+        for i, val in enumerate(substat_id_list):
+            with self.subTest(substat_id_list=val, gear_type=expected_gear_types_list[i]):
+                picked_gear_types = set()
+                expected_gear_types = set(expected_gear_types_list[i])
+
+                for j in range(10000):
+                    input_substat_id = val
+                    gear_type = test_get_gear_type(substat_ids=input_substat_id)
+                    expected_gear_type = list(expected_gear_types)
+                    picked_gear_types.add(gear_type)
+                    self.assertIn(gear_type, expected_gear_type, f"{gear_type} is not in {expected_gear_type}")
+
+                missing = expected_gear_types - picked_gear_types 
+                extra = picked_gear_types - expected_gear_types
+
+                self.assertFalse(missing, f"The following values were not selected: {missing}")
+                self.assertFalse(extra, f"The following extra values were selected: {extra}")        
         
     def test_get_gear_type_input_gear_type(self):
         """
@@ -133,6 +211,94 @@ class TestGetGearType(unittest.TestCase):
                     input_substat_ids = val
                     gear_type = test_get_gear_type(gear_type=gear_type_list[i], substat_ids=input_substat_ids)
                     expected_gear_type = expect_gear_types_list[i]
+                    self.assertEqual(gear_type, expected_gear_type, f"{gear_type} is not in {expected_gear_type}")
+        
+        
+    def test_get_gear_type_input_substats_mainstats(self):
+        """
+        Test whether we get an appropriate random gear if correct substats and mainstats are provided.
+        """
+        expected_gear_types_list = [['boots'], 
+                                    ['ring'],
+                                    ['necklace'], 
+                                    ['helm', 'ring', 'necklace', 'boots'],
+                                    ['ring', 'necklace', 'boots'],
+                                    ['ring', 'necklace', 'boots']
+                                    ]
+        mainstat_id_list = [10, 8, 6, 2, 3, 1]
+        substat_id_list = [0, 
+                           [0], 
+                           [10, 3, 4, 1], 
+                           [10, 0, 7, 8], 
+                           [1, 2], 
+                           [0, 3, 5]
+                          ]
+        
+        for i, val in enumerate(substat_id_list):
+            with self.subTest(substat_ids=val, mainstat_id=mainstat_id_list[i]):
+                for j in range(100):
+                    input_substat_ids = val
+                    gear_type = test_get_gear_type(mainstat_id=mainstat_id_list[i], substat_ids=input_substat_ids)
+                    expected_gear_type = expected_gear_types_list[i]
+                    self.assertIn(gear_type, expected_gear_type, f"{gear_type} is not in {expected_gear_type}")                    
+                    
+                    
+    def test_get_gear_type_input_substats_mainstats_type(self):
+        """
+        Test whether we get an appropriate gear if valid gear_type, substats and mainstats are provided.
+        """
+        expected_gear_types_list = ['boots', 
+                                    'ring', 
+                                    'necklace', 
+                                    'helm', 
+                                    'ring', 
+                                    'boots']
+        mainstat_id_list = [10, 8, 6, 2, 3, 1]
+        substat_id_list = [0, 
+                           [0], 
+                           [10, 3, 4, 1], 
+                           [10, 0, 7, 8], 
+                           [1, 2], 
+                           [0, 3, 5]
+                          ]
+        
+        for i, val in enumerate(substat_id_list):
+            with self.subTest(substat_ids=val, gear_type=expected_gear_types_list[i]):
+                for j in range(100):
+                    input_substat_ids = val
+                    gear_type = test_get_gear_type(gear_type=expected_gear_types_list[i], 
+                                                   mainstat_id=mainstat_id_list[i],
+                                                   substat_ids=input_substat_ids)
+                    expected_gear_type = expected_gear_types_list[i]
+                    self.assertEqual(gear_type, expected_gear_type, f"{gear_type} is not in {expected_gear_type}")
+                    
+        
+    def test_get_gear_type_all_valid_inputs(self):
+        """
+        Test whether we get an appropriate gear if valid gear_type, substats and mainstats are provided.
+        """
+        input_gear_type_list = ['weapon', 'helm', 'armor', 'necklace', 'ring', 'boots']
+        mainstat_id_list = [0, 2, 4, 7, 9, 10]
+        substat_id_list = [[1, 10, 7, 6], 
+                           [0, 1, 6, 7], 
+                           [5, 3, 10, 9], 
+                           [1, 2, 3, 10], 
+                           [4, 5, 6, 7], 
+                           [0, 2, 4, 9]
+                          ]
+        
+        for i, val in enumerate(substat_id_list):
+            with self.subTest(substat_ids=val, gear_type=input_gear_type_list[i]):
+                for j in range(100):
+                    input_substat_ids = val
+                    input_mainstat_id = mainstat_id_list[i]
+                    input_gear_type = input_gear_type_list[i]
+                    expected_gear_type = input_gear_type
+                    
+                    gear_type = test_get_gear_type(gear_type=input_gear_type, 
+                                                   mainstat_id=input_mainstat_id,
+                                                   substat_ids=input_substat_ids)
+                    
                     self.assertEqual(gear_type, expected_gear_type, f"{gear_type} is not in {expected_gear_type}")
         
         
@@ -314,7 +480,13 @@ class TestGetGearType(unittest.TestCase):
                     test_get_gear_type(mainstat_id=mainstat_id_list[i], substat_ids=val)
                     
                     
+    def test_get_gear_type_invalid_too_many_subs(self):
+        """
+        Test whether we get a Value Error when we specify too many substats:
+        """
+        with self.assertRaises(ValueError):
+            test_get_gear_type(substat_ids=[1,2,3,4,5])
                     
-                    
+                
 if __name__ == "__main__":
     unittest.main()

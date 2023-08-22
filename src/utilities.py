@@ -183,26 +183,36 @@ def get_random_set():
 
 def convert_int_to_str(obj):
     """
-    Function that takes all entries in a list and converts them to str. 
-        Raises value error if the entries are not int.
+    Function that takes all entries in a list and converts them to str
+    as long as the elements are int type or str representing an int.
     If only one int is provided, it converts it to str and returns it.
-    
+    If a string is a number, it is also returned as is.
+
     Returns: list of str
     """
 
     if isinstance(obj, int):
         return [str(obj)]
-    
-    # Check if 
+
+    elif isinstance(obj, str) and obj.isdigit():  # Check if the string is a number
+        return [obj]
+
     elif isinstance(obj, list):
-        if all(isinstance(o, int) for o in obj):
-            return [str(o) for o in obj]
-        else:
-            raise ValueError("The list must contain only integers.")
+        result = []
+        for o in obj:
+            if isinstance(o, int):
+                result.append(str(o))
+            elif isinstance(o, str) and o.isdigit():
+                result.append(o)
+            else:
+                raise TypeError(
+                    f"Invalid element in the list: {o}. Expected int or string representing a number.")
+        return result
 
     else:
-        raise ValueError("Invalid input type. Expected int or list of integers.")
-
+        raise TypeError(
+            "Invalid input type. Expected int, str, or list of integers/strings.")
+        
         
 def get_random_gear_type():
     """
