@@ -196,3 +196,72 @@ def test_get_stat_value(stat_id, stat_type='mainstat',
         value = values
 
     return value
+
+
+def test_get_gear_type(gear_type=None, mainstat_id=None, substat_ids=None):
+    """
+    Retrieves a random gear type based on provided mainstat_id and substat_id.
+    Used in the create_gear() method in Gear() class.
+    Args:
+        gear_type (str): Type of gear
+        mainstat_id (int or str): Valid stat id [0, 10]
+        substat_id (int or list of int): List of valid substat id's, can take up to 4 substat_id's
+    """
+    # Validate inputs
+    gear_type = validate_gear_type(gear_type)
+    
+    if mainstat_id is not None:
+        mainstat_id = validate_stat_id(mainstat_id)
+    
+    if substat_ids is not None:
+        substat_ids = validate_substat_ids(substat_ids, mainstat_id)
+        
+    # If no args provided, get a random gear type
+    if mainstat_id is None and substat_ids is None and gear_type is None:
+        gear_type = get_random_gear_type()
+        return gear_type
+    
+    # If mainstat_id is provided
+    if mainstat_id is not None:
+        # If gear_type is not provided
+        if gear_type is None:
+            # Get a random gear_type
+            gear_type = get_random_gear_type()
+            # Ensure that mainstat is in the allowed pool of mainstats for gear_type
+            while int(mainstat_id) not in TYPES[gear_type]['mainstat']:
+                gear_type = get_random_gear_type()
+                # If substat_id's are provided, ensure that the substat_id's
+                # are in the allowed pool of substats for gear_type
+                if substat_ids is not None:
+                    gear_type = get_gear_type_from_subs(gear_type, substat_ids)
+        
+        # If gear_type is provided
+        else:
+            # Check if provided mainstat is allowed in provided gear_type
+            if int(mainstat_id) not in TYPES[gear_type]['mainstat']:
+                raise ValueError(f"{gear_type} cannot have {mainstat_id} as mainstat.")
+            # If substat_id's are provided, ensure that the substat_id's are
+            # in the allowed pool of substats for gear_type
+            if substat_ids is not None and any(s not in convert_int_to_str(
+                TYPES[gear_type]['substat']) for s in substat_ids):
+                raise ValueError(f"{gear_type} cannot have one or more of these substats")
+    
+    # If mainstat_id is not provided    
+    else: 
+        # If gear_type is not provided
+        if gear_type is None:
+            gear_type = get_random_gear_type()
+            # If substat_id's are provided, ensure that the substat_id's
+            # are in the allowed pool of substats for gear_type
+            if substat_ids is not None:
+                gear_type = get_gear_type_from_subs(gear_type, substat_ids)
+        
+        # If gear_type is provided
+        else:
+            # If substat_id's are provided, ensure that the substat_id's are
+            # in the allowed pool of substats for gear_type
+            if substat_ids is not None and any(s not in convert_int_to_str(
+                TYPES[gear_type]['substat']) for s in substat_ids):
+                raise ValueError(f"{gear_type} cannot have one or more of these substats")
+                
+    return gear_type
