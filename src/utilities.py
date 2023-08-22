@@ -4,7 +4,8 @@ import random
 TIERS = json.loads(open('data/tiers.json', 'r').read())
 GRADES = json.loads(open('data/grades.json', 'r').read())
 STATS = json.loads(open('data/stats.json', 'r').read())
-
+SETS = json.loads(open('data/sets.json', 'r').read())
+TYPES = json.loads(open('data/types.json', 'r').read())
 
 def get_random_grade():
     """
@@ -165,3 +166,82 @@ def get_reforge_increase(stat_id, stat_type, rolled):
     reforge_increase = STATS[stat_id]['reforge'][stat_type][rolled]
     
     return reforge_increase
+
+
+def get_random_set():
+    """
+    Returns a random gear set from sets.json
+    Rates of choosing a particular grade can be edited in prep_data_GRADES.py
+    
+    Returns:
+        str 
+    """
+    gear_set = random.choice(list(SETS.keys()))
+                        
+    return gear_set    
+
+
+def convert_int_to_str(obj):
+    """
+    Function that takes all entries in a list and converts them to str. 
+        Raises value error if the entries are not int.
+    If only one int is provided, it converts it to str and returns it.
+    
+    Returns: list of str
+    """
+
+    if isinstance(obj, int):
+        return [str(obj)]
+    
+    # Check if 
+    elif isinstance(obj, list):
+        if all(isinstance(o, int) for o in obj):
+            return [str(o) for o in obj]
+        else:
+            raise ValueError("The list must contain only integers.")
+
+    else:
+        raise ValueError("Invalid input type. Expected int or list of integers.")
+
+        
+def get_random_gear_type():
+    """
+    Returns a random gear type ('weapon', 'helm', 'armor', 'necklace', 'ring', 'boots')
+    
+    Returns:
+        str 
+    """
+    gear_type = random.choice(list(TYPES.keys()))
+                              
+    return gear_type    
+        
+    
+def get_gear_type_from_subs(gear_type=None, substat_ids=None):
+    """
+    Retrieves a gear type based on given substat_id's restriction.
+    Gets a random gear type and if substat_ids is None or an empty list, returns the random gear_type.
+    If substat_id's are provided, it keeps rolling new gear_type until the provided id's are all in the 
+    pool of allowed substats for that gear type.
+    """
+    from src.validation_utils import validate_gear_type, validate_substat_ids
+
+    # Validate inputs
+    gear_type = validate_gear_type(gear_type)
+    substat_ids = validate_substat_ids(substat_ids)
+
+    # Get a random gear type if none provided
+    if gear_type is None:
+        gear_type = get_random_gear_type()
+
+    if substat_ids is not None and substat_ids != []:
+        # Get the pool of allowed substats for the gear type
+        valid_substats = convert_int_to_str(TYPES[gear_type]['substat'])
+
+        # loop to check if all the id's in the substat_ids list are
+        # present in the valid_substats list.
+        while not all(
+                substat_id in valid_substats for substat_id in substat_ids):
+            gear_type = get_random_gear_type()
+            valid_substats = convert_int_to_str(TYPES[gear_type]['substat'])
+
+    return gear_type

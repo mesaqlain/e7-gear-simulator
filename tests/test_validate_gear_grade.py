@@ -1,72 +1,73 @@
 from set_directory_function import set_directory
 set_directory()
 
-import random
-import json
 import unittest
-from src.utilities import validate_gear_grade
+from src.validation_utils import validate_gear_grade, validate_stat_type
 
-GRADES = json.loads(open('data/grades.json', 'r').read())
+class TestValidateStatType(unittest.TestCase):
 
-class TestValidateGearGrade(unittest.TestCase):
-    
-    def test_validate_gear_grade_valid_inputs_lower(self):
-        """
-        Test whether valid inputs in the lower case yield expected results.
-        """
-        valid_inputs = ['normal', 'good', 'rare', 'heroic', 'epic']
-        expected_outputs = ['normal', 'good', 'rare', 'heroic', 'epic']
-        for i, val in enumerate(valid_inputs):
-            with self.subTest(input_ = val):
-                self.assertEqual(validate_gear_grade(val), expected_outputs[i])
+    def test_valid_stat_types(self):
+        """Test valid stat types when written in smaller case, upper case, or mixed case, mod = False default"""
+        valid_stat_types = ['mainstat', 'substat', 'Mainstat', 'Substat', 'MAINstat', 'subSTAT']
+        for stat_type in valid_stat_types:
+            self.assertEqual(validate_stat_type(stat_type), stat_type.lower())
 
-    def test_validate_gear_grade_valid_inputs_capital(self):
-        """
-        Test whether valid inputs in the capital case yield expected results.
-        """
-        valid_inputs = ['Normal', 'Good', 'Rare', 'Heroic', 'Epic']
-        expected_outputs = ['normal', 'good', 'rare', 'heroic', 'epic']
-        for i, val in enumerate(valid_inputs):
-            with self.subTest(input_ = val):
-                self.assertEqual(validate_gear_grade(val), expected_outputs[i])
-
-    def test_validate_gear_grade_valid_inputs_upper(self):
-        """
-        Test whether valid inputs in the upper case yield expected results.
-        """
-        valid_inputs = ['NORMAL', 'GOOD', 'RARE', 'HEROIC', 'EPIC']
-        expected_outputs = ['normal', 'good', 'rare', 'heroic', 'epic']
-        for i, val in enumerate(valid_inputs):
-            with self.subTest(input_ = val):
-                self.assertEqual(validate_gear_grade(val), expected_outputs[i])
-
-    def test_validate_gear_grade_valid_inputs_mixed(self):
-        """
-        Test whether valid inputs in the mixed case yield expected results.
-        """
-        valid_inputs = ['norMAL', 'gOOd', 'RarE', 'heROIc', 'epIC']
-        expected_outputs = ['normal', 'good', 'rare', 'heroic', 'epic']
-        for i, val in enumerate(valid_inputs):
-            with self.subTest(input_ = val):
-                self.assertEqual(validate_gear_grade(val), expected_outputs[i])
-
-    def test_validate_gear_grade_invalid_inputs_mixed(self):
-        """
-        Test whether invalid inputs raise ValueErrors.
-        """
-        invalid_inputs = ['some str', 'excellent', 1, -1, 0]
-        for val in invalid_inputs:
+            
+    def test_invalid_gear_type_str(self):
+        """Test invalid stat types written as str, mod = False default"""
+        invalid_stat_types = ['mainstats', 'SUBSTATS', 'subs', 'Main', 'stATs', 'stat']
+        for stat_type in invalid_stat_types:
             with self.assertRaises(ValueError):
-                validate_gear_grade(val)
+                validate_stat_type(stat_type)
                 
-    def test_validate_gear_grade_none_input(self):
-        """
-        Test whether a None input returns a correct random grade.
-        """
-        expected_outputs = ['normal', 'good', 'rare', 'heroic', 'epic']
-        for i in range(1000):
-            with self.subTest(val = i):
-                self.assertIn(validate_gear_grade(None), expected_outputs)
                 
+    def test_invalid_stat_type_int(self):
+        """Test invalid stat types when an int is entered, mod = False default"""
+        with self.assertRaises(ValueError):
+            validate_stat_type(111)
+
+            
+    def test_none_stat_type(self):
+        """Test invalid stat types when None is entered, should default to 'mainstat', mod = False default"""
+        self.assertEqual(validate_stat_type(None), 'mainstat')
+        
+        
+    def test_valid_stat_types_mod_True(self):
+        """Test valid stat types when written in smaller case, upper case, or mixed case, mod = True"""
+        valid_stat_types = ['substat', 'Substat', 'subSTAT']
+        for stat_type in valid_stat_types:
+            self.assertEqual(validate_stat_type(stat_type, mod = True), stat_type.lower())
+        
+        
+    def test_invalid_stat_types_mod_True(self):
+        """Test valid stat types when written in smaller case, upper case, or mixed case, mod = True"""
+        invalid_stat_types = ['mainstat', 'Mainstat', 'MAINstat']
+        for stat_type in invalid_stat_types:
+            with self.assertRaises(ValueError):
+                validate_stat_type(stat_type, mod = True)
+        
+
+    def test_valid_stat_types_rolled_zero(self):
+        """Test valid stat types when written in smaller case, upper case, or mixed case, mod = False default, rolled=0"""
+        valid_stat_types = ['mainstat', 'substat', 'Mainstat', 'Substat', 'MAINstat', 'subSTAT']
+        for stat_type in valid_stat_types:
+            self.assertEqual(validate_stat_type(stat_type, rolled=0), stat_type.lower())
+            
+            
+    def test_valid_stat_types_rolled_non_zero_subsstats(self):
+        """Test valid stat types when written in smaller case, upper case, or mixed case, mod = False default, rolled=0"""
+        valid_stat_types = ['substat', 'Substat', 'subSTAT']
+        for stat_type in valid_stat_types:
+            self.assertEqual(validate_stat_type(stat_type, rolled=2), stat_type.lower())
+        
+        
+    def test_invalid_stat_types_rolled_non_zero(self):
+        """Test invalid stat types when written in smaller case, upper case, or mixed case, rolled=3"""
+        invalid_stat_types = ['mainstat', 'Mainstat', 'MAINstat']
+        for stat_type in invalid_stat_types:
+            with self.assertRaises(ValueError):
+                validate_stat_type(stat_type, rolled=3)
+
+        
 if __name__ == '__main__':
     unittest.main()

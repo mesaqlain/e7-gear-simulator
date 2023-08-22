@@ -18,14 +18,21 @@ class Stat:
         Initializes the Stat object.
         Args:
             stat_id (int or str): The id of the stat to retrieve (refer to STATS.json for id).
+            stat_key (str): The name of the stat
             stat_type (str): The type of stat - 'mainstat' or 'substat only'.
             gear_type (str): The type of gear - 'weapon', 'helm', 'armor', 'necklace',
                     'ring', or 'boots' only. (default: None)
+            gear_grade (str): The grade of the gear ('normal', 'good', 'rare', heroic', 'epic')
+            gear_level (int): The level of the gear
+            gear_tier (int): The tier of the gear (5, 6, 7)
             rolled (int): value between 0 and 5; how many times a stat rolled when enhancing
             reforge_increase (int) : The value by which a stat increases when reforging
+            text (str): Text description of the stat
+            value_key (str): The value key which is replaced in the text
+            modded (bool): Boolean specifying whether the gear has been modded or not
+            text_formatted (str): Formatted text showing concise description of the stat
 
         """
-        self.data = None
         self.stat_id = None
         self.stat_key = None
         self.stat_type = 'mainstat'
@@ -89,7 +96,6 @@ class Stat:
 
                 # Return the stat dictionary associated with the ID
                 return stat_data
-            
         
         # Raise a ValueError if the provided ID doesn't match any stat
         raise ValueError(f"No stat found with ID {stat_id}")
@@ -241,8 +247,6 @@ class Stat:
         self.rolled = validate_rolled(rolled, self.stat_type)
         mod = validate_mod(mod, self.stat_type)
         mod_type = validate_mod_type(mod_type)
-        
-
 
         # Parse modified stat
         if mod:

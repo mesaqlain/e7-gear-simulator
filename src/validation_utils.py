@@ -4,9 +4,12 @@ from src.utilities import *
 
 
 # Import data
-TYPES = json.loads(open('data/types.json', 'r').read())
-STATS = json.loads(open('data/stats.json', 'r').read())
-
+with open('data/types.json', 'r') as types_file:
+    TYPES = json.load(types_file)
+with open('data/stats.json', 'r') as stats_file:
+    STATS = json.load(stats_file)
+    
+    
 def validate_stat_id(stat_id):
     """
     Validate and return stat_id as str.
@@ -240,3 +243,82 @@ def validate_gear_level(gear_level):
         raise ValueError("Gear level must be an int between 58 and 100")
         
     return gear_level
+
+def validate_gear_set(gear_set):
+    """
+    Validates gear_set by checking if the input is a str and if it is one of the
+    sets from the sets.json file
+    
+    Args:
+        gear_set (str): Set name
+        
+    Returns:
+        gear_set (str)
+    """
+    if gear_set is None:
+        gear_set = get_random_set()
+    
+    if not isinstance(gear_set, str) or gear_set.lower() not in list(SETS.keys()):
+        raise ValueError("Gear set must be a str and one of the values from sets.json")
+        
+    return gear_set.lower()
+
+
+def validate_gear_set(gear_set):
+    """
+    Validates gear_set by checking if the input is a str and if it is one of the
+    sets from the sets.json file
+    
+    Args:
+        gear_set (str): Set name
+        
+    Returns:
+        gear_set (str)
+    """
+    if gear_set is None:
+        gear_set = get_random_set()
+    
+    if not isinstance(gear_set, str) or gear_set.lower() not in list(SETS.keys()):
+        raise ValueError("Gear set must be a str and one of the values from sets.json")
+        
+    return gear_set.lower()
+
+
+def validate_substat_ids(substat_ids, mainstat_id=None):
+    """
+    Validates the given substat ids. Converts integers to strings. 
+    Raises ValueError if more than 4 stat_ids provided, or if duplicates are provided.
+    Raises ValueError if mainstat id is in substat id.
+    
+    Args:
+        stat_id (int or list of ints):
+        
+    Returns:
+        stat_id (str)
+    """
+    
+    if substat_ids is None:
+        return []
+    
+    substat_ids = convert_int_to_str(substat_ids)
+
+    # Get length of substats list (how many subs provided)
+    len_ = len(substat_ids)
+
+    # Check if more than 4 subs are provided:
+    if len_ > 4:
+        raise ValueError("Please provide up to 4 sub stats only.")
+        
+    # Check if valid substat id's are provided
+    valid_substat_ids = [validate_stat_id(s) for s in substat_ids]
+    
+    # Check if duplicate substat id's are provided
+    if mainstat_id is not None:
+        mainstat_id = validate_stat_id(mainstat_id)
+        if mainstat_id in valid_substat_ids:
+            raise ValueError("Mainstat and substat cannot have same stats.")
+        
+    if len_ != len(set(valid_substat_ids)):
+        raise ValueError("Cannot add duplicate substats to a gear.")
+    
+    return valid_substat_ids
