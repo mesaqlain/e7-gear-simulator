@@ -265,3 +265,65 @@ def test_get_gear_type(gear_type=None, mainstat_id=None, substat_ids=None):
                 raise ValueError(f"{gear_type} cannot have one or more of these substats")
                 
     return gear_type
+
+
+def test_get_mainstat_id(mainstat_id=None, substat_ids=None, gear_type=None):
+    """
+    Get a mainstat_id based on provided substat_ids and gear_type.
+    Gear_type cannot be none. If no substat_ids or mainstat_ids are provided, an appropriate random
+    mainstat_id is chosen from the available pool of id's for given gear_type.
+    If substat_id's are provided, mainstat_id is chosen in a way so as not to be same as substat id.
+    Args:
+        mainstat_id (int or st): valid mainstat id from range(0, 11)
+        substat_ids (int/str or list of int/str): valid list of substat id(s) from range(0,11)
+        gear_type (str): valid gear type from types.json: 'weapon', 'helm', 'armor', 'necklace', 'ring', or 'boots'
+    """
+    # gear_type cannot be none for this function
+    if gear_type is None:
+        raise ValueError(
+            "Please provide a valid gear type: 'weapon', 'helm', 'armor', 'necklace', 'ring', or 'boots'.")
+    else:
+        gear_type = validate_gear_type(gear_type)
+
+    # Available pool of id's for given gear_type (convert to str)
+    mainstat_pool = convert_int_to_str(list(TYPES[gear_type]['mainstat']))
+    substats_pool = convert_int_to_str(list(TYPES[gear_type]['substat']))
+
+    # If no substat_ids provided
+    if substat_ids is None:
+        # If no mainstat id provided
+        if mainstat_id is None:
+            # Pick a random mainstat
+            mainstat_id = random.choice(mainstat_pool)
+        # If mainstat id is provided
+        else:
+            mainstat_id = validate_mainstat_id(mainstat_id)
+            if mainstat_id not in mainstat_pool:
+                raise ValueError(
+                    f"{gear_type} cannot have stat with id {mainstat_id}.")
+    # If substat_ids are provided
+    else:
+        # Validate substats
+        substat_ids = validate_substat_ids(substat_ids)
+        if any(s not in substats_pool for s in substat_ids):
+            raise ValueError(
+                "One or more of the substats cannot be added to this gear_type.")
+        # If no mainstat id provided
+        if mainstat_id is None:
+            # Pick a random mainstat
+            mainstat_id = random.choice(mainstat_pool)
+            # If randomly chosen mainstat is already in provided substats
+            # get a new random mainstat
+            while mainstat_id in substat_ids:
+                mainstat_id = random.choice(mainstat_pool)
+        # If mainstat id is provided
+        else:
+            mainstat_id = validate_mainstat_id(mainstat_id)
+            if mainstat_id in substat_ids:
+                raise ValueError(
+                    "Mainstat id and substat id cannot share same stats.")
+            if mainstat_id not in mainstat_pool:
+                raise ValueError(
+                    f"{gear_type} cannot have stat with id {mainstat_id}.")
+
+    return mainstat_id

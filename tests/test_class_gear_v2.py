@@ -62,28 +62,30 @@ class Gear():
         """
 
         # Validate Inputs
-        self.gear_type = validate_gear_type(gear_type)
         self.gear_set = validate_gear_set(gear_set)
         self.gear_level = validate_gear_level(gear_level)
         self.gear_tier = get_gear_tier(self.gear_level)
 
-        if gear_grade is not None:
-            self.gear_grade = validate_gear_grade(gear_grade)
-            # Number of starting substats the item will have
-            starting_substats = GRADES[self.gear_grade]['starting_substats']
+        self.mainstat_id = validate_mainstat_id(
+            mainstat_id, substat_ids)
 
-        if mainstat_id is not None:
-            self.mainstat_id = validate_stat_id(mainstat_id)
+        self.substat_ids = validate_substat_ids(
+            substat_ids, mainstat_id)
 
-        if substat_ids is not None:
-            self.substat_ids = validate_substat_ids(
-                substat_ids, self.mainstat_id)
+        # Get an appropriate gear_grade, if no substats or mainstats provided,
+        # should be completely random, otherwise get a gear_type based on provided
+        # mainstats and/or substats
+        self.gear_grade = validate_gear_grade(
+            gear_grade, 
+            mainstat_id=self.mainstat_id, 
+            substat_ids=self.substat_ids)
+        starting_substats = GRADES[self.gear_grade]['starting_substats']
 
         # Get an appropriate gear_type, if no mainstats or substats provided,
         # should be completely random, otherwise get a gear_type based on provided
         # mainstats and/or substats
         self.gear_type = self.get_gear_type(
-            self.gear_type, self.mainstat_id, self.substat_ids)
+            gear_type, self.mainstat_id, self.substat_ids)
 
         return self
     
@@ -105,7 +107,7 @@ class Gear():
         gear_type = validate_gear_type(gear_type)
 
         if mainstat_id is not None:
-            mainstat_id = validate_stat_id(mainstat_id)
+            mainstat_id = validate_mainstat_id(mainstat_id, substat_ids)
 
         if substat_ids is not None:
             substat_ids = validate_substat_ids(substat_ids, mainstat_id)
@@ -159,3 +161,6 @@ class Gear():
                     raise ValueError(f"{gear_type} cannot have one or more of these substats")
 
         return gear_type
+    
+    
+    

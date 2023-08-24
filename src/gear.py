@@ -59,42 +59,52 @@ class Gear():
         """
 
         # Validate Inputs
-        self.gear_type = validate_gear_type(gear_type)
         self.gear_set = validate_gear_set(gear_set)
         self.gear_level = validate_gear_level(gear_level)
         self.gear_tier = get_gear_tier(self.gear_level)
 
-        if gear_grade is not None:
-            self.gear_grade = validate_gear_grade(gear_grade)
-            # Number of starting substats the item will have
-            starting_substats = GRADES[self.gear_grade]['starting_substats']
+        self.mainstat_id = validate_mainstat_id(
+            mainstat_id, substat_ids)
 
-        if mainstat_id is not None:
-            self.mainstat_id = validate_stat_id(mainstat_id)
+        self.substat_ids = validate_substat_ids(
+            substat_ids, mainstat_id)
 
-        if substat_ids is not None:
-            self.substat_ids = validate_substat_ids(
-                substat_ids, self.mainstat_id)
+        # Get an appropriate gear_grade, if no substats or mainstats provided,
+        # should be completely random, otherwise get a gear_type based on provided
+        # mainstats and/or substats
+        self.gear_grade = validate_gear_grade(
+            gear_grade,
+            mainstat_id=self.mainstat_id,
+            substat_ids=self.substat_ids)
+        starting_substats = GRADES[self.gear_grade]['starting_substats']
 
         # Get an appropriate gear_type, if no mainstats or substats provided,
         # should be completely random, otherwise get a gear_type based on provided
         # mainstats and/or substats
         self.gear_type = self.get_gear_type(
-            self.gear_type, self.mainstat_id, self.substat_ids)
+            gear_type, self.mainstat_id, self.substat_ids)
+        
+        # Get an appropriate mainstat_id based on gear_type. If no mainstat or substats
+        # are provided, get a random mainstat that is in the available pool for given gear type.
+        # If substats are provided, non duplicate mainstat is chosen
+        self.mainstat_id = self.get_mainstat_id(
+            self.mainstat_id, self.substat_ids, self.gear_type)
 
-        # Get an appropriate gear_grade
-
-        return self
+        return self    
     
     
     def get_gear_type(self, gear_type=None, mainstat_id=None, substat_ids=None):
         """
         Retrieves a random gear type based on provided mainstat_id and substat_id.
         Used in the create_gear() method in Gear() class.
+        
         Args:
             gear_type (str): Type of gear
             mainstat_id (int or str): Valid stat id [0, 10]
             substat_id (int or list of int): List of valid substat id's, can take up to 4 substat_id's
+            
+        Returns:
+           gear_type (str)
         """
         # Validate inputs
         gear_type = validate_gear_type(gear_type)
@@ -154,3 +164,65 @@ class Gear():
                     raise ValueError(f"{gear_type} cannot have one or more of these substats")
 
         return gear_type
+    
+    
+    def get_mainstat_id(self, mainstat_id=None, substat_ids=None, gear_type=None):
+        """
+        Get a mainstat_id based on provided substat_ids and gear_type.
+        Gear_type cannot be none. If no substat_ids or mainstat_ids are provided, an appropriate random
+        mainstat_id is chosen from the available pool of id's for given gear_type.
+        If substat_id's are provided, mainstat_id is chosen in a way so as not to be same as substat id.
+        Args:
+            mainstat_id (int or st): valid mainstat id from range(0, 11)
+            substat_ids (int/str or list of int/str): valid list of substat id(s) from range(0,11)
+            gear_type (str): valid gear type from types.json: 'weapon', 'helm', 'armor', 'necklace', 'ring', or 'boots'
+        """
+        # gear_type cannot be none for this function
+        if gear_type is None:
+            raise ValueError(
+                "Please provide a valid gear type: 'weapon', 'helm', 'armor', 'necklace', 'ring', or 'boots'.")
+        else:
+            gear_type = validate_gear_type(gear_type)
+
+        # Available pool of id's for given gear_type (convert to str)
+        mainstat_pool = convert_int_to_str(list(TYPES[gear_type]['mainstat']))
+        substats_pool = convert_int_to_str(list(TYPES[gear_type]['substat']))
+
+        # If no substat_ids provided
+        if substat_ids is None:
+            # If no mainstat id provided
+            if mainstat_id is None:
+                # Pick a random mainstat
+                mainstat_id = random.choice(mainstat_pool)
+            # If mainstat id is provided
+            else:
+                mainstat_id = validate_mainstat_id(mainstat_id)
+                if mainstat_id not in mainstat_pool:
+                    raise ValueError(
+                        f"{gear_type} cannot have stat with id {mainstat_id}.")
+        # If substat_ids are provided
+        else:
+            # Validate substats
+            substat_ids = validate_substat_ids(substat_ids)
+            if any(s not in substats_pool for s in substat_ids):
+                raise ValueError(
+                    "One or more of the substats cannot be added to this gear_type.")
+            # If no mainstat id provided
+            if mainstat_id is None:
+                # Pick a random mainstat
+                mainstat_id = random.choice(mainstat_pool)
+                # If randomly chosen mainstat is already in provided substats
+                # get a new random mainstat
+                while mainstat_id in substat_ids:
+                    mainstat_id = random.choice(mainstat_pool)
+            # If mainstat id is provided
+            else:
+                mainstat_id = validate_mainstat_id(mainstat_id)
+                if mainstat_id in substat_ids:
+                    raise ValueError(
+                        "Mainstat id and substat id cannot share same stats.")
+                if mainstat_id not in mainstat_pool:
+                    raise ValueError(
+                        f"{gear_type} cannot have stat with id {mainstat_id}.")
+
+        return mainstat_id    

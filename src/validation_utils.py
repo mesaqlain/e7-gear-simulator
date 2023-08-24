@@ -201,28 +201,103 @@ def validate_mod_type(mod_type):
     return mod_type.lower()
 
 
-def validate_gear_grade(gear_grade):
+# def validate_gear_grade(gear_grade):
+#     """
+#     Validates gear_grade by checking if the grade is one of the values stored in GRADES.keys().
+#     Currently  ['normal', 'good', 'rare', 'heroic', 'epic'] If no
+#     If no gear_grade provided, get a random gear_grade
+#     Args:
+#         gear_grade (str): spcify gear grade
+        
+#     Returns:
+#         gear_grade (str)
+#     """
+    
+#     # Get a random gear_grade if none provided
+#     if gear_grade is None:
+#         gear_grade = get_random_grade()
+    
+#     valid_gear_grades = list(GRADES.keys())
+    
+#     if not isinstance(gear_grade, str) or gear_grade.lower() not in valid_gear_grades:
+#         raise ValueError("Gear grade must be a str from 'normal', 'good', 'rare', 'heroic', 'epic'")
+    
+#     return gear_grade.lower()
+
+def validate_gear_grade_input(gear_grade):
+    """
+    This is a helper function that is used inside the validate_gear_grade() function to 
+    check whether the input is a str and whether it is one of the valid gear grade entries from
+    the grades.json file.
+    """
+    # Valid gear grades
+    valid_gear_grades = list(GRADES.keys())
+
+    # Check if input is str, raise TypeError otherwise
+    if not isinstance(gear_grade, str):
+        raise TypeError("Gear grade must be a str input.")
+    # Check if input is one of the valied gear_grades, raise ValueError otherwise
+    if gear_grade.lower() not in valid_gear_grades:
+        raise ValueError(
+            "Gear grade must be a str from 'normal', 'good', 'rare', 'heroic', 'epic'")
+    return gear_grade.lower()
+
+
+def validate_gear_grade(gear_grade=None, mainstat_id=None, substat_ids=None):
     """
     Validates gear_grade by checking if the grade is one of the values stored in GRADES.keys().
-    Currently  ['normal', 'good', 'rare', 'heroic', 'epic'] If no
-    If no gear_grade provided, get a random gear_grade
+    Currently  ['normal', 'good', 'rare', 'heroic', 'epic'] 
+    If no gear_grade or substat_id's are provided, get a random gear_grade.
+    If substat_id's are provided, ensure that the chosen gear_grade fits the number of starting
+    substats.
+
     Args:
         gear_grade (str): spcify gear grade
-        
+        mainstat_id (int or str): Valid stat id [0, 10]
+        substat_id (int or list of int): List of valid substat id's, can take up to 4 substat_id's
+
     Returns:
         gear_grade (str)
     """
+    # If substat_id is provided
+    if substat_ids is not None:
+        substat_ids = validate_substat_ids(
+            substat_ids=substat_ids, mainstat_id=mainstat_id)
+        no_of_subs = len(substat_ids)
+
+        # If gear_grade is provided
+        if gear_grade is not None:
+            gear_grade = validate_gear_grade_input(gear_grade)
+            starting_substats = GRADES[gear_grade]['starting_substats']
+            # Raise ValueError if the number of starting substats exceeds what's allowed
+            # on provided gear_type (e.g. Heroic gear cannot start with 4 substats)
+            if starting_substats < no_of_subs:
+                raise ValueError(
+                    f"Invalid gear grade provided, {gear_grade} cannot have {no_of_subs} starting substats.")
+
+        # If gear_grade is not provided:
+        else:
+            gear_grade = get_random_grade()
+            starting_substats = GRADES[gear_grade]['starting_substats']
+            
+            # Keep rolling until we get a gear_grade that satisfies the
+            # starting_substats criteria
+            while starting_substats < no_of_subs:
+                gear_grade = get_random_grade()
+                starting_substats = GRADES[gear_grade]['starting_substats']
     
-    # Get a random gear_grade if none provided
-    if gear_grade is None:
-        gear_grade = get_random_grade()
-    
-    valid_gear_grades = list(GRADES.keys())
-    
-    if not isinstance(gear_grade, str) or gear_grade.lower() not in valid_gear_grades:
-        raise ValueError("Gear grade must be a str from 'normal', 'good', 'rare', 'heroic', 'epic'")
-    
-    return gear_grade.lower()
+    # If substat_id is not provided:
+    else:
+        
+        # If gear_grade is provided:
+        if gear_grade is not None:
+            gear_grade = validate_gear_grade_input(gear_grade)
+                
+        # If gear_grade is not provided:
+        else:
+            gear_grade = get_random_grade()
+
+    return gear_grade
 
 
 def validate_gear_level(gear_level):
@@ -264,7 +339,7 @@ def validate_gear_set(gear_set):
     return gear_set.lower()
 
 
-def validate_substat_ids(substat_ids, mainstat_id=None):
+def validate_substat_ids(substat_ids=None, mainstat_id=None):
     """
     Validates the given substat ids. Converts integers to strings. 
     Raises ValueError if more than 4 stat_ids provided, or if duplicates are provided.
@@ -302,3 +377,41 @@ def validate_substat_ids(substat_ids, mainstat_id=None):
         raise ValueError("Cannot add duplicate substats to a gear.")
     
     return valid_substat_ids
+
+
+def validate_mainstat_id(mainstat_id=None, substat_ids=None):
+    """
+    Validates the given mainstat ids. Converts result to str. 
+    Raises ValueError if mainstat id is not a valid stat_id or if the mainstat 
+    is also present in the substats.
+    
+    Args:
+        stat_id (int or str):
+        
+    Returns:
+        mainstat_id (str)
+    """
+    # If no mainstat id is provided, return None
+    if mainstat_id is None:
+        return None
+    
+    # If a mainstat id is provided
+    else:
+        # Check that provided mainstat id is a valid input
+        mainstat_id = validate_stat_id(mainstat_id)
+        # If no substat ids are provided, ensure that mainstat id is a valid id 
+        if substat_ids is None:
+            return mainstat_id
+        # If substat ids are provided, make sure that the mainstat isn't in the substats
+        else:
+            # Check if valid substat id's are provided
+            substat_ids_str = convert_int_to_str(substat_ids)
+            valid_substat_ids = [validate_stat_id(s) for s in substat_ids_str]
+            # Checking if mainstat is in substat list
+            if mainstat_id in valid_substat_ids:
+                raise ValueError("Mainstat and substat cannot have same stats.")
+            # If it isn't validate the mainstat id
+            else:
+                return mainstat_id
+                
+    return mainstat_id
