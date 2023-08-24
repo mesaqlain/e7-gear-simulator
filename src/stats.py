@@ -232,7 +232,6 @@ class Stat:
         if gear_type is not None:
             self.gear_type = validate_gear_type(gear_type)
 
-        print(f"rolled:{rolled}")
         # Use the specified stat_type if provided, otherwise use the class attribute
         if stat_type is not None:
             self.stat_type = validate_stat_type(stat_type, mod = mod, rolled = rolled)

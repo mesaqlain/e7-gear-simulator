@@ -2,6 +2,7 @@ import json
 import random
 from src.validation_utils import *
 from src.utilities import *
+from src.stats import Stat
 
 # Import Data 
 with open('data/types.json', 'r') as types_file:
@@ -34,7 +35,7 @@ class Gear():
         self.enhance_level = 0
         self.is_reforged = False
         self.mainstat = None
-        self.substats = None
+        self.substats = []
         self.mainstat_id = None
         self.substat_ids = None
         
@@ -103,7 +104,15 @@ class Gear():
             self.substat_ids,
             self.gear_type,
             self.gear_grade)
-
+        
+        self.mainstat = self.get_stat(self.mainstat_id, 'mainstat', self.gear_type, self.gear_grade,
+                                     self.gear_level)
+        
+        if len(self.substat_ids) > 0:
+            for i in self.substat_ids:
+                self.substats.append(self.get_stat(i, 'substat', self.gear_type, self.gear_grade,
+                                     self.gear_level))
+            
         return self    
     
     
@@ -301,3 +310,34 @@ class Gear():
             gear_pool.append(new_substat_id)
 
         return substat_ids
+    
+    
+    def get_stat(self, stat_id=None, stat_type='mainstat', gear_type=None, gear_grade=None, 
+             gear_level=85, mod=False, rolled=None, mod_type='greater', show_reforged=False):
+        """
+        get_stat method for Gear() class to retrieve stat information based on given attributes. All attributes must be provided.
+        
+        Args:
+            stat_id (str or int): valid stat id (0 to 10)
+            stat_type (str): The type of stat - 'mainstat' or 'substat only' (default: 'mainstat')
+            gear_type (str): The type of gear - 'weapon', 'helm', 'armor', 'necklace',
+                'ring', or 'boots' only.
+            gear_grade (str): grade of the gear - 'normal', 'good', 'rare', 'heroic', 'epic' (default: None)
+            gear_level (int): level of gear (58 to 100) (default: 85)
+            mod (bool): boolean specifying whether this is a modded stat or not (default: False)
+            rolled (int): number of times a stat has been rolled when enhancing (default: None = 0)
+            mod_type (str): type of modification - 'greater' or 'lower' (default: 'greater')
+            show_reforged (bool): whether to show the reforged value for formatted text (default: False)
+
+        """
+        # Initialize an empty stat class object
+        stat = Stat()
+        # Get the stat info by id
+        stat.get_stat_by_id(stat_id, stat_type, gear_type)
+        # Parse the stat (get a specific value)
+        stat.parse_stat(stat_type, gear_type, gear_grade, 
+                       gear_level, mod, rolled, mod_type)
+        # Get formatted text
+        stat.format_stat(show_reforged=show_reforged)
+
+        return stat

@@ -3,7 +3,7 @@ from set_directory_function import set_directory
 set_directory()
 from src.utilities import *
 from src.validation_utils import *
-
+from src.stats import Stat
 
 def get_stat_by_id(stat_id):
     """
@@ -393,7 +393,7 @@ def test_get_substat_ids(mainstat_id=None, substat_ids=None, gear_type=None, gea
 def test_get_stat(stat_id=None, stat_type='mainstat', gear_type=None, gear_grade=None, 
              gear_level=85, mod=False, rolled=None, mod_type='greater', show_reforged=False):
     """
-    Get stat method for Gear() class to retrieve stat information based on given attributes. Stat_id must be provided
+    get_stat method for Gear() class to retrieve stat information based on given attributes. All attributes must be provided.
     """
     # Initialize an empty stat class object
     stat = Stat()
