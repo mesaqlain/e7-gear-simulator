@@ -1,11 +1,16 @@
 import json
 import random
 
-TIERS = json.loads(open('data/tiers.json', 'r').read())
-GRADES = json.loads(open('data/grades.json', 'r').read())
-STATS = json.loads(open('data/stats.json', 'r').read())
-SETS = json.loads(open('data/sets.json', 'r').read())
-TYPES = json.loads(open('data/types.json', 'r').read())
+with open('data/types.json', 'r') as types_file:
+    TYPES = json.load(types_file)
+with open('data/sets.json', 'r') as sets_file:
+    SETS = json.load(sets_file)
+with open('data/tiers.json', 'r') as tiers_file:
+    TIERS = json.load(tiers_file)
+with open('data/grades.json', 'r') as grades_file:
+    GRADES = json.load(grades_file)
+with open('data/stats.json', 'r') as stats_file:
+    STATS = json.load(stats_file)
 
 def get_random_grade():
     """
@@ -190,6 +195,8 @@ def convert_int_to_str(obj):
 
     Returns: list of str
     """
+    if obj == []:
+        return []
 
     if isinstance(obj, int):
         return [str(obj)]
@@ -255,3 +262,94 @@ def get_gear_type_from_subs(gear_type=None, substat_ids=None):
             valid_substats = convert_int_to_str(TYPES[gear_type]['substat'])
 
     return gear_type
+
+
+def get_random_stat_id(gear_type=None, stat_type='substat'):
+    """
+    Get a random stat_id from available pool of stat_ids based on gear_type.
+    
+    Args:
+        gear_type (str): type of gear - 'weapon', 'helm', 'armor', 'necklace', 'ring', 'boots'
+        stat_type (str): 'mainstat' or 'substat'
+        
+    Returns:
+        random stat_id (str)
+    
+    """
+    from src.validation_utils import validate_gear_type, validate_stat_type
+    
+    # Validate inputs
+    stat_type = validate_stat_type(stat_type)
+    gear_type = validate_gear_type(gear_type)
+
+    pool = []  # Initialize an empty list to store available IDs
+
+    # If no item type provided, pick any stat from list of main stats or
+    # substats
+    if gear_type is None:
+        pool = list(STATS.keys())
+    else:
+        # Get the pool of id's available for this gear_type
+        pool = list(set(TYPES[gear_type][stat_type]))
+
+    # If the pool is empty, no stats are available, so return None
+    if pool == []:
+        return None
+
+    # Choose a random ID from the pool and fetch the associated stat
+    random_stat_id = random.choice(pool)
+    
+    return str(random_stat_id)
+
+
+def get_non_overlapping_stat_id(selected_stats = [], gear_type=None, stat_type='substat'):
+    """
+    Retrieves a new stat that is not already in the selected list of stats.
+
+    Args:
+        selected_stats (list): List containing valid stat id's (default: empty list [])
+        stat_type (str): The type of stat - 'mainstat' or 'substat only' (default: 'substat')
+        gear_type (str): The type of gear - 'weapon', 'helm', 'armor', 'necklace',
+                'ring', or 'boots' only. (default: None)
+    
+    Returns:
+        random stat_id (str)
+    """
+    from src.validation_utils import validate_gear_type, validate_stat_type, validate_selected_stats
+
+    # Validate inputs:
+    selected_stats = validate_selected_stats(selected_stats)
+    stat_type = validate_stat_type(stat_type)
+    gear_type = validate_gear_type(gear_type)
+
+    # Get a random stat
+    random_stat_id = get_random_stat_id(gear_type, stat_type)
+
+    # If the random stat already exists in given selected stats
+    while random_stat_id in selected_stats:
+        # Get a new random stat while above condition is True
+        random_stat_id = get_random_stat_id(gear_type, stat_type)
+
+    return str(random_stat_id)
+
+
+def check_valid_pool(gear_type=None, stat_type='mainstat', stat_ids=[]):
+    """
+    Checks whether the stat_id's of a given stat_type are in the valid pool of id's for given gear type.
+    Raises ValueError if the given stat_ids are not ihe valid pool.
+    """
+    # Validate inputs
+    from src.validation_utils import validate_gear_type, validate_stat_type, validate_stat_id
+
+    stat_type = validate_stat_type(stat_type)
+    stat_ids = [validate_stat_id(s) for s in convert_int_to_str(stat_ids)]
+
+    if gear_type is None:
+        raise ValueError("gear_type cannot be none.")
+    else:
+        gear_type = validate_gear_type(gear_type)
+    
+    valid_pool = convert_int_to_str(TYPES[gear_type][stat_type])
+    
+    if any(s not in valid_pool for s in stat_ids):
+        raise ValueError(f"{gear_type} cannot have one or more of the {stat_type}(s) provided.")

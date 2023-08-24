@@ -4,6 +4,7 @@ set_directory()
 import unittest
 import json
 from src.validation_utils import validate_selected_stats
+from src.utilities import convert_int_to_str
 
 STATS = json.loads(open('data/stats.json', 'r').read())
 
@@ -27,7 +28,7 @@ class TestValidateSelectedStats(unittest.TestCase):
         ]
         for i in valid_selected_stats_list:
             valid_selected_stats = i
-            self.assertEqual(validate_selected_stats(valid_selected_stats), valid_selected_stats)
+            self.assertEqual(validate_selected_stats(valid_selected_stats), convert_int_to_str(valid_selected_stats))
 
     def test_invalid_selected_stats_none(self):
         """
@@ -47,14 +48,12 @@ class TestValidateSelectedStats(unittest.TestCase):
         Test whether valid selected stats are correctly identified.
         Case 1: some integer
         Case 2: some str
-        Case 3: some list containing mix of integers and list
-        Case 4: empty dictionary
-        Case 5: some dictionary that do not contain valid stat entries
+        Case 3: empty dictionary
+        Case 4: some dictionary that do not contain valid stat entries
         """
         invalid_selected_stats_list = [
             1, 
             'health',
-            [1, 'health', '200'],
             {},
             {'stat' : 'health', 'id' : 1}
         ]

@@ -327,3 +327,82 @@ def test_get_mainstat_id(mainstat_id=None, substat_ids=None, gear_type=None):
                     f"{gear_type} cannot have stat with id {mainstat_id}.")
 
     return mainstat_id
+
+
+def test_get_substat_ids(mainstat_id=None, substat_ids=None, gear_type=None, gear_grade=None):
+    """
+    Get substat_ids based on provided gear_type, gear_grade, mainstat_id, and potential other provided substat_ids.
+    Gear_type, gear_grade, and mainstat_id cannot be none. Substat_id's are optional.
+    If no substat_ids are provided, gear type appropriate random substat_ids are chosen to fill the starting
+    number of substats for given gear grade. General restrictions apply, such as mainstat cannot be same as substats,
+    duplicate substats are not allowed, cannot have more than 4 substats, and a grade cannot have more substats
+    than the allowed starting substats number.
+
+    Args:
+        mainstat_id (int or st): valid mainstat id from range(0, 11)
+        substat_ids (int/str or list of int/str): valid list of substat id(s) from range(0,11)
+        gear_type (str): valid gear type from types.json: 'weapon', 'helm', 'armor', 'necklace', 'ring', or 'boots'
+        gear_grade (str): valid gear grade from grades.json: 'normal', 'good', 'rare', 'heroic', 'epic'
+    """
+    # gear_type cannot be none for this function
+    if gear_type is None:
+        raise ValueError(
+            "Please provide a valid gear type: 'weapon', 'helm', 'armor', 'necklace', 'ring', or 'boots'.")
+    else:
+        gear_type = validate_gear_type(gear_type)
+
+    # gear_grade cannot be none for this function
+    if gear_grade is None:
+        raise ValueError(
+            "Please provide a valid gear grade: 'normal', 'good', 'rare', 'heroic', or 'epic'.")
+    else:
+        gear_grade = validate_gear_grade(gear_grade, mainstat_id, substat_ids)
+
+    # mainstat_id cannot be none for this function
+    if mainstat_id is None:
+        raise ValueError(
+            "Please provide a valid mainstat id.")
+    else:
+        mainstat_id = validate_mainstat_id(mainstat_id, substat_ids, gear_type)
+
+    # Validate substat_ids:
+    substat_ids = validate_substat_ids(substat_ids, mainstat_id, gear_type)
+
+    # Available pool of id's for given gear_type (convert to str)
+    substats_pool = convert_int_to_str(list(TYPES[gear_type]['substat']))
+    
+    # Number of starting substats allowed on gear
+    starting_substats = GRADES[gear_grade]['starting_substats']
+
+    # Number of substats that still needs to be added to gear:
+    subs_remaining = starting_substats - len(substat_ids)
+    
+    # Initialize gear pool list which will hold both mainstat and substat ids:
+    gear_pool = substat_ids + [mainstat_id]
+
+    # Add new non-overlapping substats until we have the appropriate number of 
+    # starting substats
+    for i in range(subs_remaining):
+        new_substat_id = get_non_overlapping_stat_id(gear_pool, gear_type=gear_type, stat_type='substat')
+        substat_ids.append(new_substat_id)
+        gear_pool.append(new_substat_id)
+        
+    return substat_ids
+
+
+def test_get_stat(stat_id=None, stat_type='mainstat', gear_type=None, gear_grade=None, 
+             gear_level=85, mod=False, rolled=None, mod_type='greater', show_reforged=False):
+    """
+    Get stat method for Gear() class to retrieve stat information based on given attributes. Stat_id must be provided
+    """
+    # Initialize an empty stat class object
+    stat = Stat()
+    # Get the stat info by id
+    stat.get_stat_by_id(stat_id, stat_type, gear_type)
+    # Parse the stat (get a specific value)
+    stat.parse_stat(stat_type, gear_type, gear_grade, 
+                   gear_level, mod, rolled, mod_type)
+    # Get formatted text
+    stat.format_stat(show_reforged=show_reforged)
+    
+    return stat

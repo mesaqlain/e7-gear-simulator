@@ -25,7 +25,7 @@ def validate_stat_id(stat_id):
     # Check if it's a string or integer in [0, 10]
     if not isinstance(stat_id, (str, int)) or str(stat_id) not in [key for key in STATS.keys()]:
         raise ValueError("Stat ID must be a string or integer in [0, 10].")
-
+        
     return str(stat_id)
 
 
@@ -88,8 +88,9 @@ def validate_stat_type(stat_type, mod = False, rolled = 0):
     if stat_type == 'mainstat' and mod:
         raise ValueError("Mainstats cannot be modded")
         
-    if rolled != 0 and stat_type == 'mainstat':
-        raise ValueError("Mainstats cannot have rolled values.")
+    if rolled is not None:
+        if rolled > 0 and stat_type == 'mainstat':
+            raise ValueError("Mainstats cannot have rolled values.")
         
     return stat_type
 
@@ -125,6 +126,9 @@ def validate_selected_stats(selected_stats):
     # Check if it's a string
     if not isinstance(selected_stats, list):
         raise ValueError("Selected stat_id's must be entered as a list.")
+    
+    # In case of ints provided in list, convert each element to str    
+    selected_stats = convert_int_to_str(selected_stats)
 
     # Check if all strings in the list are valid keys in STATS
     valid_keys = [str(key) for key in STATS.keys()]
@@ -339,7 +343,7 @@ def validate_gear_set(gear_set):
     return gear_set.lower()
 
 
-def validate_substat_ids(substat_ids=None, mainstat_id=None):
+def validate_substat_ids(substat_ids=None, mainstat_id=None, gear_type = None):
     """
     Validates the given substat ids. Converts integers to strings. 
     Raises ValueError if more than 4 stat_ids provided, or if duplicates are provided.
@@ -372,14 +376,20 @@ def validate_substat_ids(substat_ids=None, mainstat_id=None):
         mainstat_id = validate_stat_id(mainstat_id)
         if mainstat_id in valid_substat_ids:
             raise ValueError("Mainstat and substat cannot have same stats.")
+        if gear_type is not None:
+            check_valid_pool(gear_type, 'mainstat', mainstat_id)
         
     if len_ != len(set(valid_substat_ids)):
         raise ValueError("Cannot add duplicate substats to a gear.")
-    
+        
+    # Make sure that gear_type doesn't clash with substats
+    if gear_type is not None:
+        check_valid_pool(gear_type, 'substat', valid_substat_ids)
+        
     return valid_substat_ids
 
 
-def validate_mainstat_id(mainstat_id=None, substat_ids=None):
+def validate_mainstat_id(mainstat_id=None, substat_ids=None, gear_type=None):
     """
     Validates the given mainstat ids. Converts result to str. 
     Raises ValueError if mainstat id is not a valid stat_id or if the mainstat 
@@ -401,6 +411,9 @@ def validate_mainstat_id(mainstat_id=None, substat_ids=None):
         mainstat_id = validate_stat_id(mainstat_id)
         # If no substat ids are provided, ensure that mainstat id is a valid id 
         if substat_ids is None:
+            # Make sure that gear_type doesn't clash with mainstats
+            if gear_type is not None:
+                check_valid_pool(gear_type, 'mainstat', mainstat_id)
             return mainstat_id
         # If substat ids are provided, make sure that the mainstat isn't in the substats
         else:
@@ -412,6 +425,13 @@ def validate_mainstat_id(mainstat_id=None, substat_ids=None):
                 raise ValueError("Mainstat and substat cannot have same stats.")
             # If it isn't validate the mainstat id
             else:
+                # Make sure that gear_type doesn't clash with mainstats
+                if gear_type is not None:
+                    check_valid_pool(gear_type, 'substat', valid_substat_ids)
                 return mainstat_id
+                
+    # Make sure that gear_type doesn't clash with mainstats
+    if gear_type is not None:
+        check_valid_pool(gear_type, 'mainstat', mainstat_id)
                 
     return mainstat_id

@@ -22,6 +22,21 @@ class TestValidateMainstatID(unittest.TestCase):
                 self.assertEqual(output, expected_output, f"Output - {output} doesn't match input - {input_val}")
                 
                 
+    def test_valid_inputs_1_gear(self):
+        """
+        Check valid inputs of ints against expected results. substat_id=None
+        """
+        valid_inputs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        valid_gear = ['weapon', 'ring', 'helm', 'necklace', 'armor', 'boots', 'necklace', 'necklace', 'ring', 'ring', 'boots']
+        expected_outputs = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+        
+        for i, input_val in enumerate(valid_inputs):
+            with self.subTest(input_val=input_val):
+                output = validate_mainstat_id(input_val, gear_type =valid_gear[i])
+                expected_output = expected_outputs[i]
+                self.assertEqual(output, expected_output, f"Output - {output} doesn't match input - {input_val}")
+                
+                
     def test_valid_inputs_2(self):
         """
         Check valid inputs of str against expected results. substat_id=None
@@ -36,15 +51,24 @@ class TestValidateMainstatID(unittest.TestCase):
                 self.assertEqual(output, expected_output, f"Output - {output} doesn't match input - {input_val}")
                 
                 
-    def test_valid_inputs_with_substat(self):
+    def test_valid_inputs_with_substat_gear_type(self):
         """
         Check valid inputs against expected results.
-        Case 1: Valid stat_id
-        Case 2: Valid stat_id
-        Case 3: List of 4 valid stat_ids
-        Case 4: List of 3 valid stat_ids
-        Case 5: List of 2 valid stat_ids
-        Case 6: List of 1 valid stat_id
+        """
+        valid_inputs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        valid_substats = [1, [0, 2], [0, 10, 3], [0, 1, 6, 7], [3, 7, 8, 9], 0, 10, [3, 4], [7, 5, 3], [5, 8, 3, 4], 9]
+        valid_gear = ['weapon', 'ring', 'helm', 'necklace', 'armor', 'boots', 'necklace', 'necklace', 'ring', 'ring', 'boots']
+        expected_outputs = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+        for i, input_val in enumerate(valid_inputs):
+            with self.subTest(input_val=input_val):
+                output = validate_mainstat_id(input_val, substat_ids=valid_substats[i], gear_type=valid_gear[i])
+                expected_output = expected_outputs[i]
+                self.assertEqual(output, expected_output, f"Output - {output} doesn't match input - {input_val}")
+
+                
+    def test_valid_inputs_with_substat_with(self):
+        """
+        Check valid inputs against expected results.
         """
         valid_inputs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         valid_substats = [1, [0, 2], [0, 10, 3], [0, 1, 6, 7], [0, 7, 8, 9], 0, 10, [3, 4], [7, 5, 3], [5, 8, 3, 4], 9]
@@ -115,6 +139,34 @@ class TestValidateMainstatID(unittest.TestCase):
             with self.subTest(input_val=val):
                 with self.assertRaises(ValueError, msg="{input_val} did not raise a ValueError"):
                     validate_mainstat_id(val, invalid_substats[i])     
+                    
+                    
+    def test_invalid_inputs_with_substat_gear_type(self):
+        """
+        Valid main, invalid subs for given gear.
+        """
+        valid_inputs = [0, 2, 4]
+        valid_substats = [4, [0, 1, 2], [0, 10, 3]]
+        invalid_gear = ['weapon', 'helm', 'armor']
+        
+        for i, input_val in enumerate(valid_inputs):
+            with self.subTest(input_val=input_val):
+                with self.assertRaises(ValueError, msg="{input_val} did not raise a ValueError"):
+                    validate_mainstat_id(input_val, valid_substats[i], gear_type=invalid_gear[i])     
+                    
+                    
+    def test_invalid_inputs_with_mainstat_gear_type(self):
+        """
+        Valid subs, invalid mains for given gear.
+        """
+        valid_inputs = [1, 3, 5]
+        valid_substats = [[1, 10, 9, 3], [0, 1, 3, 7], [10, 3, 5, 8]]
+        invalid_gear = ['weapon', 'helm', 'armor']
+        
+        for i, input_val in enumerate(valid_inputs):
+            with self.subTest(input_val=input_val):
+                with self.assertRaises(ValueError, msg="{input_val} did not raise a ValueError"):
+                    validate_mainstat_id(input_val, valid_substats[i], gear_type=invalid_gear[i])     
                     
                     
 if __name__ == '__main__':
