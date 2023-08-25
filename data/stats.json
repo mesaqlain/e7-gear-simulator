@@ -7313,7 +7313,7 @@
         "id": 10,
         "text": "<A> <B>Speed",
         "key_stat": "speed_flat",
-        "gscore": 1,
+        "gscore": 2,
         "reforge": {
             "mainstat": [
                 45

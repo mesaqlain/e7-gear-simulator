@@ -341,3 +341,36 @@ class Gear():
         stat.format_stat(show_reforged=show_reforged)
 
         return stat
+    
+    
+    def get_gear_score(self):
+        """
+        Calculate the standardizd gear score of an item
+        Args:
+            gear (Gear): gear object
+
+        Returns:
+            list of two values -
+                first value is gear score before reforge
+                second value is gear score after reforge
+        """
+        # Initialize variables, which will increase as we loop through the stats
+        gear_score = 0
+        reforged_score = 0
+
+        # Loop through each substat and add to the score variables
+        for s in self.substats:
+            # ID of the stat
+            s_id = str(s.stat_id)
+            # Parsed value
+            s_val = s.value
+
+            # Calculate the gear score before reforge:
+            gear_score += s_val * STATS[s_id]['gscore']
+
+            # Stat value after reforge
+            s_val_ref = s_val + s.reforge_increase
+            # Calculate the gear score after reforge based on stat multiplier
+            reforged_score += s_val_ref * STATS[s_id]['gscore']
+
+        return [round(gear_score), round(reforged_score)]

@@ -738,7 +738,7 @@ STATS = {
         'id': 10,
         'text': '<A> <B>Speed',
         'key_stat': 'speed_flat',
-        'gscore': 1,
+        'gscore': 2,
         'reforge': {'mainstat': [45], 'substat': rf_spd},
         'vars': {
                 'mainstat': {'key': '<A>', 'type': 'fixed', 'values': {
