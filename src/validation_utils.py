@@ -205,29 +205,6 @@ def validate_mod_type(mod_type):
     return mod_type.lower()
 
 
-# def validate_gear_grade(gear_grade):
-#     """
-#     Validates gear_grade by checking if the grade is one of the values stored in GRADES.keys().
-#     Currently  ['normal', 'good', 'rare', 'heroic', 'epic'] If no
-#     If no gear_grade provided, get a random gear_grade
-#     Args:
-#         gear_grade (str): spcify gear grade
-        
-#     Returns:
-#         gear_grade (str)
-#     """
-    
-#     # Get a random gear_grade if none provided
-#     if gear_grade is None:
-#         gear_grade = get_random_grade()
-    
-#     valid_gear_grades = list(GRADES.keys())
-    
-#     if not isinstance(gear_grade, str) or gear_grade.lower() not in valid_gear_grades:
-#         raise ValueError("Gear grade must be a str from 'normal', 'good', 'rare', 'heroic', 'epic'")
-    
-#     return gear_grade.lower()
-
 def validate_gear_grade_input(gear_grade):
     """
     This is a helper function that is used inside the validate_gear_grade() function to 
