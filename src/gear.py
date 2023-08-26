@@ -402,3 +402,33 @@ class Gear():
         for s in self.substats:
             # If gear has been reforged, no need to show reforged stats
             print(s.format_stat(show_reforged=not self.is_reforged))
+            
+            
+    def add_substat(self, verbose = False):
+        """
+        Adds a new substat to the gear that isn't already in the mainstat or substats.
+        """
+        # Current number of substats on gear
+        no_of_substats = len(self.substat_ids)
+
+        if no_of_substats == 4:
+            raise ValueError("Gear already has maximum number of allowed substats.")
+
+        # Available pool of id's for given gear_type (convert to str)
+        substats_pool = convert_int_to_str(list(TYPES[self.gear_type]['substat']))
+
+        # Initialize gear pool list which will hold both mainstat and substat ids:
+        gear_pool = self.substat_ids + [self.mainstat_id]
+
+        # Get a new non-overlapping substat 
+        new_substat_id = get_non_overlapping_stat_id(gear_pool, gear_type=self.gear_type, stat_type='substat')
+        self.substat_ids.append(new_substat_id)
+        new_substat = self.get_stat(new_substat_id, 'substat', self.gear_type, self.gear_grade,
+                                         self.gear_level)
+        self.substats.append(new_substat)
+
+        if verbose:
+            print(f'New Substat Added: {new_substat.text_formatted}!')
+            print('---')
+
+        return self
