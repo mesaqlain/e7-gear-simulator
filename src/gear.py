@@ -374,3 +374,31 @@ class Gear():
             reforged_score += s_val_ref * STATS[s_id]['gscore']
 
         return [round(gear_score), round(reforged_score)]
+    
+    
+    def print_gear(self):
+        """
+        Print the contents of the gear gear. 
+        Displays the enhancement level, gear grade, type, and level on first line.
+        Displays the MAINSTAT next.
+        Displays the SUBSTAT(S) last.
+        """
+        print('---')
+        print(
+            f"+{self.enhance_level} {self.gear_grade.capitalize()} {self.gear_type.capitalize()} (Lv {self.gear_level})")
+        print(f"{self.gear_set.capitalize()} Set")
+
+        print('---')
+        print('MAIN STAT:')
+        print(self.mainstat.format_stat())
+
+        print('---')
+        # Singular/Plurarl
+        if len(self.substats) == 1:
+            print('SUBSTAT:')
+        else:
+            print('SUBSTATS:')
+
+        for s in self.substats:
+            # If gear has been reforged, no need to show reforged stats
+            print(s.format_stat(show_reforged=not self.is_reforged))
