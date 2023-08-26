@@ -11,7 +11,7 @@ with open('data/grades.json', 'r') as grades_file:
     GRADES = json.load(grades_file)
 with open('data/stats.json', 'r') as stats_file:
     STATS = json.load(stats_file)
-
+    
 def get_random_grade():
     """
     Returns a random gear grade ('rare', 'heroic', 'epic')
@@ -41,7 +41,6 @@ def get_gear_tier(gear_level):
     Returns:
         (int) Tier of gear (5, 6 or 7)
     """
-    # Import the function
     from src.validation_utils import validate_gear_level
     
     # Validate gear level

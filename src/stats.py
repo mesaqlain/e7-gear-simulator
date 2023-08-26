@@ -314,3 +314,70 @@ class Stat:
 
         # Return the formatted text representation of the parsed stat
         return text
+    
+    
+    def enhance_stat(self, enhance_level=0):
+        """
+        Method to enhance a stat.
+
+        Args:
+            enhance_level (int) : Current level of enhancement on the gear
+
+        Returns:
+            self
+        """
+        # Validate inputs
+        enhance_level = validate_enhance_level(enhance_level)
+
+        # Get stat attributes
+        stat_type = self.stat_type
+        stat_id = self.stat_id
+        gear_level = self.gear_level
+        gear_tier = get_gear_tier(gear_level)
+        gear_grade = self.gear_grade
+        
+        # Enhancement for mainstat
+        if stat_type == 'mainstat':
+            mainstat_multiplier = [
+                1.2,
+                1.4,
+                1.6,
+                1.8,
+                2,
+                2.2,
+                2.4,
+                2.6,
+                2.8,
+                3,
+                3.3,
+                3.6,
+                3.9,
+                4.25,
+                5]
+            # Get the base value at enhance level 0
+            base_value = get_stat_value(stat_id, 'mainstat', gear_level, gear_grade)
+            # Get enhanced value at new enhance level
+            enhanced_value = round(base_value * mainstat_multiplier[enhance_level])
+
+            # Assign the new value
+            self.value = enhanced_value
+            # Update formatted text
+            self.format_stat()
+
+        # Enhancement for substat
+        else:
+            pass
+            # Get an enhanced stat value
+            enhanced_value = get_stat_value(stat_id, 'substat', gear_level, gear_grade)
+
+            # Add the enhanced value to current value:
+            self.value += enhanced_value
+            # Update rolled count:
+            self.rolled += 1
+            # Update reforge increase value
+            self.reforge_increase = get_reforge_increase(
+                stat_id, stat_type, self.rolled)
+            # Update formatted text
+            self.format_stat()
+
+        return self

@@ -412,3 +412,20 @@ def validate_mainstat_id(mainstat_id=None, substat_ids=None, gear_type=None):
         check_valid_pool(gear_type, 'mainstat', mainstat_id)
                 
     return mainstat_id
+
+
+def validate_enhance_level(enhance_level=None):
+    """
+    Validates the input enhance level. Input must be int between 0 and 15
+    """
+    # If none provided, set to 0
+    if enhance_level is None:
+        enhance_level = 0
+    # If provided, check that it's an int between 0 and 15
+    else:
+        if not isinstance(enhance_level, int):
+            raise TypeError("Enhance Level must be an int.")
+        elif enhance_level not in list(range(0, 16)):
+            raise ValueError("Enhance Level must be between 0 and 15")
+            
+    return enhance_level
