@@ -402,6 +402,15 @@ class Gear():
         for s in self.substats:
             # If gear has been reforged, no need to show reforged stats
             print(s.format_stat(show_reforged=not self.is_reforged))
+        
+        # Get Gear Score
+        gear_score = self.get_gear_score()
+        
+        print('---')
+        if self.is_reforged:
+            print(f'GEAR SCORE: {gear_score[0]}')
+        else:
+            print(f'GEAR SCORE: {gear_score[0]} ({gear_score[1]})')
             
             
     def add_substat(self, verbose = False):
@@ -429,6 +438,54 @@ class Gear():
 
         if verbose:
             print(f'New Substat Added: {new_substat.text_formatted}!')
-            print('---')
+
+        return self
+    
+    
+    def enhance_gear(self, verbose = False):
+        """
+        Method to enhance a gear.
+        """
+        # Current enhance level:
+        enhance_level = self.enhance_level
+
+        # Check if gear is already at max enhance level
+        if enhance_level == 15:
+            print("Gear is already at maximum enhancement level!")
+
+        else:
+            # Enhance mainstat
+            self.mainstat.enhance_stat(enhance_level)
+
+            # Enhance Substat Conditions
+            # Rare Gear
+            if self.gear_grade == 'rare' and (enhance_level == 8 or enhance_level == 11):
+                self.add_substat(verbose = verbose)
+
+            elif self.gear_grade == 'heroic' and (enhance_level == 11):
+                self.add_substat(verbose = verbose)
+
+            elif ((enhance_level + 1) % 3) == 0:  # Enhance only at 3 level increments
+                random_substat = random.choice(self.substats)
+                random_substat_value_before = random_substat.value
+                # Enhance
+                random_substat.enhance_stat(enhance_level)
+                random_substat_value_after = random_substat.value            
+
+                if verbose:
+                    # Difference in value
+                    enhanced_value = random_substat_value_after - random_substat_value_before
+                    text = '+' + \
+                        random_substat.text + ' Increase!'
+                    text = text.replace(
+                        '<A>', str(enhanced_value)).replace(
+                        '<B>', '')
+                    print(text)
+
+            # Update enhancement level
+            self.enhance_level += 1
+            # If gear is at +15
+            if self.enhance_level == 15:
+                print("Gear has been fully enhanced to +15!")
 
         return self
