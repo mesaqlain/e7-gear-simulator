@@ -489,3 +489,43 @@ class Gear():
                 print("Gear has been fully enhanced to +15!")
 
         return self
+    
+    
+    def reforge_gear(self):
+        """
+        Reforges a Lv 85 gear into Lv 90. Only Lv 85 gear that has been fully enhanced to +15 may be reforged. 
+        A gear may be reforged only once.
+        """
+        # Check if gear is already reforged:
+        if self.is_reforged:
+            print("Cannot reforge a gear that has already been reforged.")
+            return self
+
+        # Check if gear is level 85 or not
+        elif self.gear_level != 85:
+            print("Cannot reforge a gear that is not Level 85.")
+            return self
+
+        # Check if gear hasn't been fully enhanced yet
+        elif self.enhance_level < 15:
+            print("Cannot reforge a gear that has not been enhanced to +15 yet.")
+            return self
+
+        else:
+            # Reforge mainstat
+            self.mainstat.reforge_stat()
+
+            # Reforge the substats
+            for i in self.substats:
+                i.reforge_stat()
+
+            # Update reforged status
+            self.is_reforged = True
+
+            # Update gear level
+            self.gear_level = 90
+
+            # Print confirmation
+            print("Gear has been reforged!")
+
+        return self

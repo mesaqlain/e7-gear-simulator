@@ -366,7 +366,6 @@ class Stat:
 
         # Enhancement for substat
         else:
-            pass
             # Get an enhanced stat value
             enhanced_value = get_stat_value(stat_id, 'substat', gear_level, gear_grade)
 
@@ -379,5 +378,25 @@ class Stat:
                 stat_id, stat_type, self.rolled)
             # Update formatted text
             self.format_stat()
+
+        return self
+    
+    
+    def reforge_stat(self):
+        """
+        Reforges the stat value.
+        """
+        # If substat, add reforge increase value to current value
+        stat_type = self.stat_type
+
+        if stat_type == 'substat':
+            reforged_value = self.value + self.reforge_increase
+
+        # If mainstat, replace current value with reforge value
+        else:
+            reforged_value = self.reforge_increase
+
+        # Update the value
+        self.value = reforged_value
 
         return self
