@@ -77,7 +77,7 @@ The data preparation modules and the json files created by these modules are fou
 * [STATS](https://github.com/mesaqlain/e7_items/blob/main/data/prep_data_STATS.py): Contains data on the stats that show up on gear.
 
 ### 3.4 Testing
-The testing modules are found in the [tests](https://github.com/mesaqlain/e7_items/blob/main/tests/) folder. The testing process is documented in this [notebook](https://github.com/mesaqlain/e7_items/blob/main/Epic7GearSimulator_Tests_Documentation.ipynb). 
+The testing modules are found in the [tests](https://github.com/mesaqlain/e7_items/blob/main/tests/) folder. The testing process is documented in the [Epic7GearSimulator Tests Documentation](https://github.com/mesaqlain/e7_items/blob/main/Epic7GearSimulator_Tests_Documentation.ipynb) notebook. 
 
 ### 3.5 Upcoming Features
 * UI to use this package more conveniently.
