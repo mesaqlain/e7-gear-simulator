@@ -11,13 +11,63 @@ This is an ongoing project to create an app in python that will simulate the gen
 The features are explained in depth in their respective sections.
 
 ## 2 Requirements / Imports
-* json
-* random
+* No external libraries required to use this package.
 * pandas (only for data_prep modules in /data folder)
+* DeepDiff (only for certain test modules)
 
 ## 3 Useage / Directions
 
-### 3.X Data Preparation
+### 3.1 Creating a Gear
+
+Use the notebook [Epic7GearSimulator](https://github.com/mesaqlain/e7_items/blob/main/Epic7GearSimulator.ipynb) to run the codes. The notebook also shows some examples.
+
+**Create a Random Gear**
+1. The Gear class needs to be imported from /src/gear.py.
+2. First instantiate a Gear() object, e.g. `gear = Gear()`
+3. You can create a new completely random gear if you don't provide any parameters using the method `.create_gear()`, e.g. `gear.create_gear()`.
+4. Chaining the method `.print_gear()` will show the gear contents, e.g. `gear.create_gear().print_gear()`.
+5. You can **enhance** a gear by using the method `.enhance_gear()`, e.g. `gear.enhance_gear().print_gear()`. (details in section 6.1)
+6. Once a gear has been enhanced to +15, you have options to reforge or modify a gear.
+7. You can **reforge** a gear by using the `.reforge_gear()` method, e.g. `gear.reforge_gear().print_gear()`. (details in section 6.2)
+8. You can **modify** a gear (before or after reforge) by using the method `.modify_gear()`. (details in section 6.3)
+    * modify_gear() takes in 3 arguments - stat_index, mod_stat_id, and mod_type.
+    * **stat_index** is a number from 1 to 4, indicating which substat on the gear you want to replace.
+    * **mod_stat_id** is the index of the stat you want to replace with (details on which id refers to which stat in section 5.1).
+    * **mod_type** is 'greater' by default. Another option is 'lesser'.
+    * e.g. `gear.modify_gear(1, 10).print_gear` - modify the 1st substat on the gear with the Speed substat (and mod_type is greater by default).
+    * Please note that usual restrictions apply when trying to add a new substat to a gear (such as no duplicates allowed, must be available in the available pool of substats for the gear_type).
+    * Once you modify a gear, you are only allowed to further modify the already modified substat; other substats on that gear are now fixed in stone and may not be modified.
+
+**Create a Gear with Specific Attributes**
+1. `from src.gear import Gear`
+2. `gear = Gear()`
+3. `.create_gear()` takes in several arguments -
+    * gear_type = 'weapon', 'helm', 'armor', 'necklace', 'ring', or 'boots'. If none provided, it randomly selects one. (details in section 4.1)
+    * gear_grade = 'rare', 'heroic', 'epic'. (details in section 4.4)
+    * gear_set = If none provided, randomly selects one. Check section 4.2 for available gear sets.
+    * gear_level = Default is 85, but accepts any level between 58 and 100.
+    * mainstat_id = An integer containing one of the stat id's from 0 to 10. If none provided, it'll randomly select an id that is in the available pool of mainstats for the gear_type; it'll also not select any mainstat that is already in the substats if substats have been provided. (details on which id refers to which stat in section 5.1)
+    * substat_ids = List of up to 4 integers (from 0 to 10). If none provided, it'll randomly select **n** id's that are in the available pool of substats for the gear_type, where **n** is the number of starting substats allowed on given (or randomly selected) gear type; it'll also not select any substat that is already in the mainstat if mainstat has been provided. (details on which id refers to which stat in section 5.1)
+    * The method will raise an error if trying to add mainstats or substats that are not allowed on a specific gear type, if duplicate substats or more than 4 substats are provided, or if the number of provided substats exceed what is allowed as starting substats for given gear grade. (details in section 5.2)
+    * e.g. `gear.create_gear(gear_type='weapon', gear_grade='epic', gear_set='speed', substat_ids=[10, 1, 3]` - create an **Epic** grade, **Speed** set, **Weapon**. Since no level is provided, default 85 is used. Notice that mainstat is not provided, so it'll pick the only available mainstat for weapon gear types - flat attack (or we could have specified mainstat=0). 3 substat id's are provided - Speed, Attack %, and Healtth %, which are all in the available pool of substats for Weapon gear type. The given gear grade is Epic (so there must be 4 starting substats); as we provided only 3 substats, it'll randomly pick the 4th substat following the usual gear restrictions.
+4. Once the gear has been created, you can enhance, reforge, or modify as before with the random gear.
+
+A few more examples are shown in the [Epic7GearSimulator](https://github.com/mesaqlain/e7_items/blob/main/Epic7GearSimulator.ipynb) notebook.
+
+### 3.2 Further Customize the Gear
+While the above methods of enhancing, reforging and modifying strictly follow the rules in place in the Epic 7 game, you are able to further customize any of the mainstat or substats if you wish by using the methods in the Stat() class.
+1. When you create a gear, the gear.mainstat attribute holds one **Stat** object that may be modified using Stat class methods; the gear.substats attribute holds up to 4 **Stat** objects that may be similarly modified.
+2. `stat.stat_id` holds the id of the stat (from 0 to 10)
+3. `stat.stat_key` holds the stat_key of the stat (check section 5.1 for sta details)
+4. `stat.value` holds the value of stat, e.g. `gear.mainstat.value = 100` will set the value of the mainstat to 100.
+5. `stat.rolled` holds the count of how many times a stat has been rolled when enhancing, e.g. `gear.substats[0].rolled = 3` will set the rolled count of the 0th index stat to 3.
+6. If you do change the rolled count, you may want to update the `stat.reforge_increase` value as well, as it does not update automatically but depends on the rolled count and the stat_type, e.g. `stat.reforge_increase = get_reforge_increase(stat.stat_id, stat.stat_type, stat.rolled)`. get_reforge_increase() function may be found in [utilities.py](https://github.com/mesaqlain/e7_items/blob/main/src/utilities.py)
+7. You may also want to enhance stats by choice, in which case you could use the `.enhance_stat()` method, e.g. `gear.substats[0].enhance.stat()` - this will enhance the substat at the 0th index.
+8. Finally, you may want to update the display of the text description by using the `.format_stat()` method, e.g. `gear.substats[0].format_stat()`.
+
+A few examples of modifying a stat within the gear is shown in the [Epic7GearSimulator](https://github.com/mesaqlain/e7_items/blob/main/Epic7GearSimulator.ipynb) notebook.
+          
+### 3.3 Data Preparation
 The data preparation modules and the json files created by these modules are found in the /data folder. More information on what values to use from this data is found in sections 4 and 5. The scripts could be modified to add new information as the game gets updated with new sets or tiers.
 * [TYPES](https://github.com/mesaqlain/e7_items/blob/main/data/prep_data_TYPES.py): Contains data on gear types.
 * [TIERS](https://github.com/mesaqlain/e7_items/blob/main/data/prep_data_TIERS.py): Contains data on gear tiers.
@@ -25,8 +75,11 @@ The data preparation modules and the json files created by these modules are fou
 * [SETS](https://github.com/mesaqlain/e7_items/blob/main/data/prep_data_SETS.py): Contains data on gear sets.
 * [STATS](https://github.com/mesaqlain/e7_items/blob/main/data/prep_data_STATS.py): Contains data on the stats that show up on gear.
 
-### 3.X Testing
+### 3.4 Testing
 The testing modules are found in the [tests](https://github.com/mesaqlain/e7_items/blob/main/tests/) folder. The testing process is documented in this [notebook](https://github.com/mesaqlain/e7_items/blob/main/Epic7GearSimulator_Tests_Documentation.ipynb). 
+
+### 3.5 Upcoming Features
+* UI to use this package more conveniently.
 
 ## 4 Item / Gear Attributes
 Gear in Epic Seven have several attributes: **Type**, **Grade**, **Set**, **Tier** (derived from **Level**), **Main Stats**, and **Sub Stats**.
@@ -60,8 +113,6 @@ A gear could belong to one of the following sets: Health, Defense, Speed, Attack
 Currently any Gear type / level, or tier can belong to any set, so there are no restrictions regarding sets when it comes to creating an item (unless a set is specified). An additional functionality could be added by specifying which **Hunt** stage each set can be acquired from.
 
 For details on the sets, refer to the *pre_data_SETS.py* script. Gear Sets data is stored in the **SETS.json** file.
-
-Note: Revenge, Penetration, Injury, Protection, and Torrent still need to be added.
 
 ### 4.3 Level / Tier
 
