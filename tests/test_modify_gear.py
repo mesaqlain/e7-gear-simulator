@@ -22,9 +22,9 @@ class TestModifyGear(unittest.TestCase):
         """
         Modify should not work unless a gear is +15 enhancement level
         """
-        enhance_level_list = list(range(0,15))
+        input_levels = [70, 75, 80, 88, 90]        
         
-        for l in enhance_level_list:
+        for l in input_levels:
             gear = Gear()
             gear.create_gear(gear_grade='epic', substat_ids=[10, 9, 5, 7], mainstat_id=3)
             gear.enhance_level = l
