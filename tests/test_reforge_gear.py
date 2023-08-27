@@ -22,9 +22,9 @@ class TestReforgeGear(unittest.TestCase):
         """
         Reforge should not work on a gear that is no +15
         """
-        enhance_level_list = list(range(0,15))
+        input_levels = [70, 75, 80, 88, 90]
         
-        for l in enhance_level_list:
+        for l in input_levels:
             enhance_level = 0
             gear = Gear()
             gear.create_gear(gear_level = l)
