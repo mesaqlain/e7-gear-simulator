@@ -529,3 +529,57 @@ class Gear():
             print("Gear has been reforged!")
 
         return self
+    
+    
+    def modify_gear(self, stat_index=None, mod_stat_id=None, mod_type='greater'):
+        """
+        Method to modify an gear object.
+        Args:
+            stat_index (int): The index of the stat to be modified (1 to 4)
+            mod_stat_id (int/str): valid stat id of the stat that will replace the stat on the gear
+            mod_type (str): modification gem type, either 'greater' or 'lesser'
+
+        Returns:
+            gear
+        """
+        # Check if gear has been fully enhanced
+        if self.enhance_level < 15:
+            print("Cannot modify a gear that has not been enhanced to +15 yet.")
+            return self
+
+        # Validate inputs
+        # Subtract 1 from stat index so that index starts from 0
+        stat_index = validate_stat_index(stat_index) - 1
+        mod_stat_id = validate_stat_id(mod_stat_id)
+        mod_type = validate_mod_type(mod_type)
+
+        # Check if any of the other substats have been modified (they will have 'modded' = True)
+        # If so, we cannot proceed with modification, as modification is only
+        # allowed on one substat per gear
+        for i, substat in enumerate(self.substats):
+            if i != stat_index and substat.modded:
+                print("Cannot modify substat when another substat has been modified already.")
+                return self
+
+        # Check if the provided mod_stat_id is in the valid pool of subs
+        # This function raises a Value Error if incorrect mod is provided
+        check_valid_pool(self.gear_type, 'substat', [mod_stat_id])
+
+        # Check if the mod stat already exists in the gear in other lines
+        current_stats = self.substat_ids + [self.mainstat_id]
+        if any(stat_id == mod_stat_id for i,
+               stat_id in enumerate(current_stats) if i != stat_index):
+            print("Cannot add a substat that already exists on the gear.")
+            return self
+
+        rolled = self.substats[stat_index].rolled
+        new_stat = self.get_stat(stat_id=mod_stat_id, stat_type='substat', gear_type=self.gear_type, 
+                                 gear_grade=self.gear_grade, gear_level=self.gear_level, mod=True, 
+                                 rolled=rolled, mod_type=mod_type, show_reforged=not self.is_reforged)
+        # Replace old stat with modded:
+        self.substats[stat_index] = new_stat
+
+        # Print confirmation
+        print("Gear has been modded with a new substat.")
+
+        return self

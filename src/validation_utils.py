@@ -429,3 +429,21 @@ def validate_enhance_level(enhance_level=None):
             raise ValueError("Enhance Level must be between 0 and 15")
             
     return enhance_level
+
+
+def validate_stat_index(stat_index = None):
+    """
+    Validates the input enhance level. Input must be int between 0 and 15
+    """
+    # If none provided, raise error
+    if stat_index is None:
+        raise ValueError("Please provided a valid Stat Index between 1 to 4.")
+        
+    # If provided, check that it's an int between 1 and 4
+    else:
+        if not isinstance(stat_index, int):
+            raise TypeError("Stat Index must be an int.")
+        elif stat_index not in list(range(1, 5)):
+            raise ValueError("Stat Index must be between 1 and 4.")
+            
+    return stat_index

@@ -20,11 +20,11 @@ class TestReforgeGear(unittest.TestCase):
     
     def test_reforge_non_lv_85_gear(self):
         """
-        Reforge should not work on a non-lv 85 gear
+        Reforge should not work on a gear that is no +15
         """
-        input_levels = [70, 75, 80, 88, 90]
+        enhance_level_list = list(range(0,15))
         
-        for l in input_levels:
+        for l in enhance_level_list:
             enhance_level = 0
             gear = Gear()
             gear.create_gear(gear_level = l)
