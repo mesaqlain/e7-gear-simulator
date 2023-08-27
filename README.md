@@ -17,6 +17,10 @@ The features are explained in depth in their respective sections.
 
 ## 3 Useage / Directions
 
+### 3.0 Clone The Repo
+
+First, clone the repo to your local machine to get the essential folders (/src, /data) and the files in the root directory. The /tests folder is unnecessary and may be deleted.
+
 ### 3.1 Creating a Gear
 
 Use the notebook [Epic7GearSimulator](https://github.com/mesaqlain/e7_items/blob/main/Epic7GearSimulator.ipynb) to run the codes. The notebook also shows some examples.
