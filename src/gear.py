@@ -583,3 +583,19 @@ class Gear():
         print("Gear has been modded with a new substat.")
 
         return self
+    
+    
+    def enhance_gear_max(self):
+        """
+        Max enhance a gear to +15
+        """
+        if self.enhance_level != 0:
+            print("You can only use this method on +0 gear.")
+
+            return self
+
+        else:
+            for i in range(15):
+                self.enhance_gear()
+
+        return self

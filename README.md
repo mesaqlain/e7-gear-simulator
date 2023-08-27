@@ -26,7 +26,8 @@ Use the notebook [Epic7GearSimulator](https://github.com/mesaqlain/e7_items/blob
 2. First instantiate a Gear() object, e.g. `gear = Gear()`
 3. You can create a new completely random gear if you don't provide any parameters using the method `.create_gear()`, e.g. `gear.create_gear()`.
 4. Chaining the method `.print_gear()` will show the gear contents, e.g. `gear.create_gear().print_gear()`.
-5. You can **enhance** a gear by using the method `.enhance_gear()`, e.g. `gear.enhance_gear().print_gear()`. (details in section 6.1)
+5. You can **enhance** a gear by 1 level by using the method `.enhance_gear()`, e.g. `gear.enhance_gear().print_gear()`. (details in section 6.1)
+    * You can also enhance a gear to +15 directly by using the `enhance_gear_max()` method; this only works on +0 gear (gear that has not been enhanced at all).
 6. Once a gear has been enhanced to +15, you have options to reforge or modify a gear.
 7. You can **reforge** a gear by using the `.reforge_gear()` method, e.g. `gear.reforge_gear().print_gear()`. (details in section 6.2)
 8. You can **modify** a gear (before or after reforge) by using the method `.modify_gear()`. (details in section 6.3)
